@@ -1,35 +1,36 @@
 const express = require('express');
 const router = express.Router();///test-you
 //importing a custom module
-const xyz = require('../logger/logger')
+const log = require('../logger/logger')
 //importing external package
-const underscore = require('underscore')
-
-const validator = require('../validator/formatter')
+const lodash2 = require('../lodash/lodash') 
 
 
-router.get('/test-me', function (req, res) {
-    //Calling the components of a different custom module
-    console.log("Calling my function ",xyz.myFunction())
+const validators = require('../validator/formatter')
+const helperr = require('../util/helper')
 
-    console.log(xyz.Welcome())
-
-    console.log("The value of the constant is ",xyz.myUrl)
-    //Trying to use an external package called underscore
-
-console.log("Today is", validator.Date)
-console.log("Today is", validator.Month)
-console.log("Today is", validator.batchInfo)
-
-    let myArray = ['Akash', 'Pritesh', 'Sabiha']
-
-    let result = underscore.first(myArray)
-    console.log("The result of underscores examples api is : ", result)
-    
-    res.send('My first ever api!')
+router.get('/test-mee', function (req, res) {
+    console.log(log.Welcome())
+    console.log(validators.endingPoint.result())
+    console.log(validators.endingPoint.lowerCase())
+    console.log(validators.endingPoint.upperCase())
 
     //To be tried what happens if we send multiple response
-    //res.send('My second api!')
+    res.send('My second api!')
+});
+
+router.get('/test-lodash', function (req,res){
+res.send(lodash2.myLodash())
+});
+
+router.get('/test-me', function (req, res) {
+
+    console.log(helperr.dateMonth())
+
+    res.send(helperr.batchInfo())
+
+    //To be tried what happens if we send multiple response
+
 });
 
 module.exports = router;

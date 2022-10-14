@@ -1,11 +1,17 @@
-const date = new Date();
-console.log(date);
 
-const month = date.getMonth();
-console.log(month);
+const result =function (){
+    let word ="    functionup       " 
+    return (word.trim())  
+}
+   
+const lowerCase = function (){
+    let word = "funCTionUp"
+    return (word.toLowerCase())
+}
 
+const upperCase = function(){
+    let word  = "funCTionUp"
+    return (word.toUpperCase())
+}
 
-module.exports.Date= date;
-module.exports.Month= month;
-
-
+module.exports.endingPoint = {result, lowerCase, upperCase}
