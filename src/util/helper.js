@@ -1,5 +1,5 @@
 
-const oops = function daily(){
+const currentDataAndMonth = function (){
     const date = new Date();
 
 const month = date.getMonth()+ 1;
@@ -22,7 +22,7 @@ return (`My Batch is ${batch.name}, this is ${batch.Week}, and the topic for tod
 
 
 module.exports.batchInfo = getBatchInfo;
-module.exports.dateMonth = oops;
+module.exports.dateMonth = currentDataAndMonth;
 
 
 

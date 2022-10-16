@@ -10,13 +10,13 @@ const validators = require('../validator/formatter')
 const helperr = require('../util/helper')
 
 router.get('/test-mee', function (req, res) {
-    console.log(log.Welcome())
+    
     console.log(validators.endingPoint.result())
     console.log(validators.endingPoint.lowerCase())
     console.log(validators.endingPoint.upperCase())
 
     //To be tried what happens if we send multiple response
-    res.send('My second api!')
+    console.log(log.Welcome())
 });
 
 router.get('/test-lodash', function (req,res){
@@ -29,7 +29,7 @@ router.get('/test-me', function (req, res) {
 
     res.send(helperr.batchInfo())
 
-    //To be tried what happens if we send multiple response
+
 
 });
 

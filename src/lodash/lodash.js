@@ -10,7 +10,7 @@ function lodash1(){
       console.log(lodash.tail(oddNum, 9));
       
     
-      const Num = [2, 5, 4, 2, 7];
+      const Num = [2, 5, 4, 2, 7, 4, 9, 13, 18, 13];
       console.log(lodash.union(Num));
     
       const keyValue = [
