@@ -16,6 +16,33 @@ router.get("/test-api" , function(req, res) {
     res.send("hi FunctionUp")
 })
 
+router.get('/sol1',function (req,res ){
+    let arr = [1,2,3,5,6,7]
+    let total =0
+for (let element in arr){
+    total+=arr[element]
+}            
+let lastDigit = arr.pop()
+let sum = lastDigit*(lastDigit+1)/2     
+let missingNumber =sum-total
+res.send ({data:missingNumber})
+})
+
+
+router.get('/sol2',function (req,res ){
+    let arr = [33, 34, 35, 37, 38]
+    let len = arr.length
+    let total = 0
+    for (let element in arr){
+        total+=arr[element]
+    }
+    let firstDigit = arr[0]
+    lastDigit = arr.pop()
+    let sum = (len+1)*(firstDigit+lastDigit)/2
+    let missingNumber=sum-total
+    res.send({data:missingNumber})
+})
+
 
 router.get("/test-api-2" , function(req, res) {
     res.send("hi FunctionUp. This is another cool API")
