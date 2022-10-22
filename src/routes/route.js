@@ -4,29 +4,87 @@ const underscore = require('underscore')
 
 const router = express.Router();
 
-router.get('/test-me', function (req, res) {
-    myHelper.printDate()
-    myHelper.getCurrentMonth()
-    myHelper.getCohortData()
-    let firstElement = underscore.first(['Sabiha','Akash','Pritesh'])
-    console.log('The first element received from underscope function is '+firstElement)
-    res.send('My first ever api!')
-});
+let players =
+   [
+       {
+           "name": "manish",
+           "dob": "1/1/1995",
+           "gender": "male",
+           "city": "jalandhar",
+           "sports": [
+               "swimming"
+           ]
+       },
+       {
+           "name": "gopal",
+           "dob": "1/09/1995",
+           "gender": "male",
+           "city": "delhi",
+           "sports": [
+               "soccer"
+           ]
+       },
+       {
+           "name": "lokesh",
+           "dob": "1/1/1990",
+           "gender": "male",
+           "city": "mumbai",
+           "sports": [
+               "soccer"
+           ]
+       },
+       
+   ]
+ 
 
-router.get("/movies/:indexNumber", function(req, res){
-    const movies = ["Rang de basanti", "The shining", "Lord of the rings", "Batman begins"]
-    console.log(req.params.indexNumber)
-    let movieIndex = req.params.indexNumber
-    //check index value. less than 0 or greater than array (length - 1) are not valid
-    if(movieIndex<0 || movieIndex>=movies.length) {
-        //if the index is invalid send an error message
-        return res.send('The index value is not correct, Please check the it')
-    }
+router.post('/playersDetails', function(req,res){
+    let playerData = req.body
+    let newPlayer  = playerData.name
+    let isNameRepeated = false
 
-    //if the index was valid send the movie at that index in response
-    let requiredMovie = movies[movieIndex]
-    res.send(requiredMovie)
+    for(let i=0; i<players.length; i++){
+
+    if(players[i].name == newPlayer){
+        isNameRepeated =true
+            break;
+} 
+}
+if(isNameRepeated){
+
+    res.send ("This Player is already exist")
+
+} 
+    players.push(playerData)
+res.send({data:players, status:true})
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 router.get("/shoes", function(req, res){
     let queryParams = req.query
