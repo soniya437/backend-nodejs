@@ -1,27 +1,21 @@
-const mongoose = require('mongoose')
-// const xyz = require ('../validator/validator')
+const mongoose = require('mongoose');
 
 
+const bookSchema = new mongoose.Schema( {
+    name: String, 
+    author_id:{
+        type:Number,
+        required:true
 
-let bookSchema = new mongoose.Schema({
-  
-        bookName: {type:String,
-        require:true},
-        price: {
-            indianPrice: String,
-            europePrice: String,
-        },
-        year:{
-            type:Number,
-            default:2021
-        }, 
-        tags: [String],
-        authorName: String,
-        totalPages:Number,
-        isPublished:Boolean,
-        stockAvailable: Boolean,
+    },
+     
+    prices: Number,
+    ratings: Number
     
-    
-      },{ timestamps: true })
-module.exports = mongoose.model('Book Model',bookSchema)
+   
+}, { timestamps: true });
+
+
+
+module.exports = mongoose.model('BookCollection', bookSchema)     
 
