@@ -11,7 +11,7 @@ const createBook= async function (req, res) {
 }
 
 
-const bookByCb= async function(req, res){
+const listOfAllBook= async function(req, res){
     let booksOfCb = await authorModel.find({author_name: "Chetan Bhagat"}).select("author_id")
     console.log(booksOfCb)
     let finalData = await bookModel.find({author_id:booksOfCb[0].author_id})
@@ -20,7 +20,7 @@ const bookByCb= async function(req, res){
 }
 
 const findAndUpdate = async function (req, res){
-    let newValue = await bookModel.findOneAndUpdate({name: "Two states"},{$set: {prices: 200}},{new:true})
+    let newValue = await bookModel.findOneAndUpdate({name: "Sea of Stars"},{$set: {prices: 250}},{new:true})
     let updatePrice = newValue.prices;
    let authorUpdate = await authorModel.find({author_id: {$eq: newValue.author_id}}).select({authorName:1, _id:0});
    res.send({msg: authorUpdate, updatePrice});
@@ -39,7 +39,7 @@ const findAndUpdate = async function (req, res){
 
 
     module.exports.createBook=createBook
-    module.exports.listOfAllBook=bookByCb
+    module.exports.listOfAllBook=listOfAllBook
     module.exports.findUpdate=findAndUpdate
     module.exports.findBook=findBook
 

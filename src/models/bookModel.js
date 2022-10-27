@@ -6,12 +6,11 @@ const bookSchema = new mongoose.Schema( {
     author_id:{
         type:Number,
         required:true
-
+    }, 
+    prices:{
+        type: String
     },
-     
-    prices: Number,
     ratings: Number
-    
    
 }, { timestamps: true });
 
