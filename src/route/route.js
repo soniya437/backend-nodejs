@@ -2,7 +2,7 @@
 const express = require('express')
 const Router = express.Router()
 const bookController = require('../bookController/bookController')
-const authorController = require('../authorController/authorController')
+const authorController = require('../controllers/authorController')
 
 
 

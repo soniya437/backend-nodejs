@@ -1,5 +1,5 @@
- const authorModel = require('../authorModel/authorModel')
- const bookModel = require('../bookModel/bookModel')
+ const authorModel = require('../models/authorModel')
+ const bookModel = require('../models/bookModel')
 
 const createAuthor= async function (req, res) {
     let data= req.body

@@ -1,7 +1,7 @@
- const bookModel = require('../bookModel/bookModel')
+ const bookModel = require('../models/bookModel')
 //  const{isValidRequestBody,isValid,isValidName, isNaNYear}=require('../validator/validator')
-const authorModel = require('../authorModel/authorModel')
-const { authorId } = require('../authorController/authorController')
+const authorModel = require('../models/authorModel')
+const { authorId } = require('../controllers/authorController')
 
 
 const createBook= async function (req, res) {
