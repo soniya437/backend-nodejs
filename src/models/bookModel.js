@@ -7,8 +7,12 @@ const bookSchema = new mongoose.Schema( {
     
     isPublished: Boolean,
     prices: {
-        indianPrice: String,
+        indianPrice:String,
         europePrice: String,
+    },
+    author:{
+        type:String,
+        ref:"author"
     },
     sales: {type: Number, default: 10},
     
