@@ -17,6 +17,5 @@ router.get('/homePage',commonMW.localServer, UserController.basicCode)
 
 router.get('/basicRoute', commonMW.localServer, UserController.basicCode)
 
-//commonMW.mid1, commonMW.mid2, commonMW.mid3, commonMW.mid4, 
 
 module.exports = router;
