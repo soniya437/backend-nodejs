@@ -1,9 +1,11 @@
 
 const express=require('express');
 
-const route=express.Router();
+const router=express.Router();
+const authorController= require("../controllers/authorController");
 
-route.get('/test-me',()=>{res.send({status: true})});
+router.post("/authors",authorController.createAuthor);
 
 
-module.exports=route;
+
+module.exports=router;
