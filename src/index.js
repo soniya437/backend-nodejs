@@ -9,6 +9,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
 
+mongoose.connect("mongodb+srv://soniyayy:Soniya123@cluster0.ltjt0u7.mongodb.net/group7Database")
+.then(function(){
+    console.log("MongoDB is connected")
+})
+.catch(function(errors){
+    console.log({errors: errors.message})
+})
+
 
 app.use('/', route);
 
