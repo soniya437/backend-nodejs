@@ -20,8 +20,7 @@ const createAuthor = async function (req, res) {
         if (!email) {
             return res.status(400).send({ status: false, msg: "email is required" })
         };
-        let regexEmail=  /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/
-        
+        let regexEmail=  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
         if(!email.match(regexEmail)){
             return res.status(400).send({status: false, msg: "Invalid email"})
         }
@@ -34,7 +33,7 @@ const createAuthor = async function (req, res) {
             return res.status(400).send({ status: false, msg: "password is required" })
         }
         let savedData= await authorModel.create(req.body)
-        return res.status(201).send({status: true, msg: savedData})
+        return res.status(201).send({status: true, data: savedData})
 
     } catch (error) {
         return res.status(500).send({ status: false, msg: error.message })

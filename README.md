@@ -41,6 +41,8 @@ By author Id
 By category
 List of blogs that have a specific tag
 List of blogs that have a specific subcategory example of a query url: blogs?filtername=filtervalue&f2=fv2
+
+
 PUT /blogs/:blogId
 Updates a blog by changing the its title, body, adding tags, adding a subcategory. (Assuming tag and subcategory received in body is need to be added)
 Updates a blog by changing its publish status i.e. adds publishedAt date and set published to true
@@ -115,3 +117,10 @@ Successful Login Response structure
 }
 Refer https://jsonplaceholder.typicode.com/guide/ for some fake blogs data.
 Note: Create a group database and use the same database in connection string by replacing `groupXDatabase
+
+
+
+ if (!authorId || !category || !tags || !subcategory) {
+                        return res.send({ status: false, msg: "Enter the required fields" })
+                     } 
+                }
