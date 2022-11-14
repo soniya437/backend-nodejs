@@ -1,22 +1,22 @@
 const mongoose = require("mongoose")
-const objectId = mongoose.Schema.Types.ObjecId
+const objectId = mongoose.Schema.Types.ObjectId
 
 const blogsSchema = new mongoose.Schema({
 title: {
     type: String,
-required: true}, 
+    required: true}, 
 body: {
     type: String,
     required: true}, 
 authorId: {
     type: objectId,
-    ref: Author,
+    ref: "Author",
     required: true
 }, 
 tags: [String], 
 category:  {
     type: String,
-required: true}, 
+    required: true}, 
 subcategory: [String],
 isDeleted: {
     type: Boolean, 
