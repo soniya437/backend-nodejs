@@ -110,8 +110,32 @@ const getBlogs = async function (req, res) {
   }
 };
 
+const updateBlogs = async function (req, res) {
+  try {
+      let blogId = req.params.blogId;
+      let availableBlog = await blogModel.findById(blogId);
+
+      if (!availableBlog) {
+          return res.status(404).send({ status: false, msg: "Blog Not Found" });
+      }
+      if (availableBlog.isDeleted == true) {
+          return res.status(404).send({ status: false, msg: "Blog already deleted" })};
+        let data= req.body;
+        if(!Object.keys(data).length>0){
+          res.status(400).send({status: false, msg : "Provide Data for Updation"})};
+        
+         let updatedData = await blogModel.findOneAndUpdate({_id:blogId}, {$set : {isPublished: true, title: data.title, body :data.body, publishedAt: new Date()},
+        $push :{tags: data.tags, subcategory: data.subcategory} },{new: true});
+         return res.status(200).send({status: true, data : updatedData})  
+         
+      }catch (error) { res.status(500).send({ status: false, msg: error.message }) }
+  };
+  
 
 
 
-module.exports.createBlog = createBlog
-module.exports.getBlogs = getBlogs
+
+
+module.exports.createBlog = createBlog;
+module.exports.getBlogs = getBlogs;
+module.exports.updateBlogs=updateBlogs
