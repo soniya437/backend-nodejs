@@ -1,5 +1,4 @@
 const mongoose = require("mongoose")
-const moment = require("moment")
 const objectId = mongoose.Schema.Types.ObjectId
 
 const blogsSchema = new mongoose.Schema({
@@ -26,7 +25,7 @@ isDeleted: {
 },
 deletedAt: {
     type :Date,
-    default: console.log(moment().format('MMMM Do YYYY, h:mm:ss a'))
+    default: null
 },
 
 isPublished: {

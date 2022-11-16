@@ -13,6 +13,10 @@ let createBlog = async (req, res) => {
         if (!title) {
             return res.status(400).send({ status: false, msg: "Title is required" })
         };
+        let blogTitle = await blogModel.findOne({title: req.body.title})
+        if(blogTitle){
+          return res.status(400).send({status: false, msg: "Title already exist"})
+        }
         if (!body) {
             return res.status(400).send({ status: false, msg: "Body is required" })
         };
@@ -22,6 +26,11 @@ let createBlog = async (req, res) => {
         if (!objectId(authorId)) {
             return res.status(400).send({ status: false, msg: "Invalid Author ID" })
         };
+        let checkAuthorId = await blogModel.findById(authorId)
+        if(!checkAuthorId){
+          return res.status(404).send({status: false, msg: "No such authorId"})
+        }
+        
         if (!category) {
             return res.status(400).send({ status: false, msg: "Category is required" })
         }
