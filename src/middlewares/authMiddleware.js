@@ -13,10 +13,10 @@ const authentication = function (req, res, next) {
 
         let decodedToken = jwt.verify(token, "group7")
         if (!decodedToken) {
-            res.status(500).send({ status: false, msg: "Invalid Token" })
+           return res.status(401).send({ status: false, msg: "Invalid Token" })
         }
 
-         req.decodedToken = decodedToken.userId   //{userId: savedData1._id}
+        req.decodedToken = decodedToken
         next()
     } catch (error) {
         return res.status(500).send({ status: false, msg: error.message })
@@ -26,11 +26,11 @@ const authentication = function (req, res, next) {
 
 const authorisation = async function(req, res, next){
 
-let userTobeModified = req.params.blogId
-if(!objectId(userTobeModified)){
+let blogId = req.params.blogId
+if(!objectId(blogId)){
     return res.status(400).send({status: true, msg: "BlogId is invalid"})
 }
-let availableBlog = await blogModel.findById(userTobeModified);
+let availableBlog = await blogModel.findById(blogId)
 
 if (!availableBlog) {
     return res.status(404).send({ status: false, msg: "No such data" });
@@ -39,27 +39,21 @@ if (availableBlog.isDeleted === true) {
     return res.status(404).send({ status: false, msg: "Blog not exists" })
 };
 
+let authorId = availableBlog.authorId
+
+let decodedToken = req.decodedToken
+let userTobeModified = decodedToken.userId
 
 
-if(req.decodedToken !== userTobeModified ){
+if(userTobeModified !== authorId.toString() ){
     return res.status(403).send({status: false, msg: "Unauthorised user"})
 }
 
+req.authorId = authorId
 
 
+next()
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

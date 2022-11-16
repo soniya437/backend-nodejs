@@ -56,23 +56,18 @@ const loginAuthor = async function(req, res){
        if(!password){
            return res.status(400).send({status: false, msg: "Provide password"})
                }
-   let savedData = await authorModel.findOne({ email, password }).select({_id: 1}) /// savedData = {_id: 637213c5276a332a43f57965}
+   let savedData = await authorModel.findOne({ email, password }) /// savedData = {_id: 637213c5276a332a43f57965}
    if(!savedData){
        return res.status(404).send({status: false, msg: "No such data"})
    }
    
-   let encodeToken = jwt.sign({userId: savedData}, "group7")
+   let encodeToken = jwt.sign({userId: savedData._id}, "group7")
    return res.status(200).send({status: true, data: encodeToken})
    }catch(error){
        return res.status(500).send({status: false, msg: error.message})
    }
    
    }
-
-
-
-
-
 
 
 
