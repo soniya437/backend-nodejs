@@ -30,11 +30,9 @@ const loginAuthor = async function(req, res){
      return res.status(404).send({status: false, msg: "No such data"})
  }
  
-let savedData1 = await blogModel.find(savedData)  /// savedData1 = [{}]
+let savedData1 = await blogModel.findOne({savedData})  /// savedData1 = {}
 
-let arr = savedData1[i] ///{}
-
- let encodeToken = jwt.sign({userId: arr._id}, "group7")
+ let encodeToken = jwt.sign({userId: savedData1._id}, "group7")
  return res.status(200).send({status: true, data: encodeToken})
  }catch(error){
      return res.status(500).send({status: false, msg: error.message})
@@ -184,26 +182,15 @@ const getBlogs = async function (req, res) {
 
 const updateBlogs = async function (req, res) {
     try {
-        let blogId = req.params.blogId;
-        if (!objectId(blogId)) {
-            return res.status(400).send({ status: false, msg: "Invalid blogId" })
-        }
-        let availableBlog = await blogModel.findById(blogId);
-
-        if (!availableBlog) {
-            return res.status(404).send({ status: false, msg: "No such data" });
-        }
-        if (availableBlog.isDeleted === true) {
-            return res.status(404).send({ status: false, msg: "Blog not exists" })
-        };
-
+     const userTobeModified = req.userTobeModified
+       
         let data = req.body;
 
         if (!Object.keys(data).length > 0) {
             res.status(400).send({ status: false, msg: "Provide Data for Updation" })
         };
 
-        let updatedData = await blogModel.findOneAndUpdate({ _id: blogId }, {
+        let updatedData = await blogModel.findOneAndUpdate({ _id: userTobeModified }, {
             $set: { isPublished: true, title: data.title, body: data.body, publishedAt: new Date() },
             $push: { tags: data.tags, subcategory: data.subcategory }
         }, { new: true });
@@ -215,20 +202,8 @@ const updateBlogs = async function (req, res) {
 
 const deleteBlogs = async function (req, res) {
     try {
-        let blogId = req.params.blogId;
-        if (!objectId(blogId)) {
-            return res.status(400).send({ status: false, msg: "Invalid blogId" })
-        }
-        let availableBlog = await blogModel.findById(blogId);
-
-        if (!availableBlog) {
-            return res.status(404).send({ status: false, msg: "No such data" });
-        }
-        if (availableBlog.isDeleted === true) {
-            return res.status(404).send({ status: false, msg: "Blog already deleted" })
-        }
-
-        await blogModel.findOneAndUpdate({ _id: blogId }, { $set: { isDeleted: true, deletedAt: new Date() } });
+      const userTobeModified = req.userTobeModified
+        await blogModel.findOneAndUpdate({ _id: userTobeModified }, { $set: { isDeleted: true, deletedAt: new Date() } });
         return res.status(200).send({ status: true, msg: "Blog deleted successfully" })
 
     } catch (error) { res.status(500).send({ status: false, msg: error.message }) }
