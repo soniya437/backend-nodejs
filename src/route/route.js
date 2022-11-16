@@ -17,8 +17,11 @@ router.put( "/blogs/:blogId", authMiddleware.authentication, authMiddleware.auth
 
 router.delete( "/blogs/:blogId", authMiddleware.authentication, authMiddleware.authorisation, blogController.deleteBlogs)
 
-router.delete( "/blogs", blogController.deleteByQuery)
+router.delete( "/blogs",authMiddleware.authentication, blogController.deleteByQuery)
 
+router.all("/*", function(req, res){
+    return res.status(400).send({status: false, msg: "Path not found" })
+})
 
 
 module.exports = router;

@@ -16,7 +16,7 @@ const authentication = function (req, res, next) {
            return res.status(401).send({ status: false, msg: "Invalid Token" })
         }
 
-        req.decodedToken = decodedToken
+        req.decodedToken = decodedToken.userId
         next()
     } catch (error) {
         return res.status(500).send({ status: false, msg: error.message })
@@ -49,7 +49,7 @@ if(userTobeModified !== authorId.toString() ){
     return res.status(403).send({status: false, msg: "Unauthorised user"})
 }
 
-req.authorId = authorId
+//req.authorId = authorId
 
 
 next()
