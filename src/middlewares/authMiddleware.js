@@ -4,7 +4,7 @@ const objectId = mongoose.isValidObjectId
 
 const blogModel = require('../models/blogsModel') 
 
-
+//------------------Authentication--------------------------------------------------------------------------------------------------------------
 const authentication = function (req, res, next) {
 
     try {
@@ -23,7 +23,7 @@ const authentication = function (req, res, next) {
     }
 }
 
-
+// --------------------Authorisation---------------------------------------------------------------------------------------------------------------
 const authorisation = async function(req, res, next){
 
 let blogId = req.params.blogId

@@ -7,11 +7,11 @@ const mongoose = require('mongoose')
 const objectId = mongoose.isValidObjectId
 const jwt = require("jsonwebtoken")
 
-
+    //-----------------Create Blog----------------------------------------------------------------------------------------------------------------
 let createBlog = async (req, res) => {
 
     try {
-        let { title, body, authorId, category } = req.body
+        let { title, body, authorId, category, tags, subcategory } = req.body
 
         if (!Object.keys(req.body).length > 0) {
             return res.status(400).send({ status: false, msg: "Provide Details" })
@@ -19,7 +19,9 @@ let createBlog = async (req, res) => {
         if (!title) {
             return res.status(400).send({ status: false, msg: "Title is required" })
         };
-        let blogTitle = await blogModel.findOne({title: req.body.title})
+
+        let blogTitle = await blogModel.findOne({title: req.body.title})// unique Title of Blog
+
         if(blogTitle){
           return res.status(400).send({status: false, msg: "Title already exist"})
         }
@@ -33,23 +35,30 @@ let createBlog = async (req, res) => {
             return res.status(400).send({ status: false, msg: "Invalid Author ID" })
         };
         let checkAuthorId = await authorModel.findById(authorId)
+
         if(!checkAuthorId){
           return res.status(404).send({status: false, msg: "No such authorId"})
-        }
-        
+        };
         if (!category) {
             return res.status(400).send({ status: false, msg: "Category is required" })
         }
+        if (!validator.isValidString(category)) {
+            return res.status(400).send({status: false,message: "Category cannot be empty while fetching."
+            })};
+        if (!validator.isValidString(tags)) {
+            return res.status(400).send({status: false,message: "tags cannot be empty while fetching."}) };
+        if (!validator.isValidString(subcategory)) {
+            return res.status(400).send({status: false,message: "subcategory cannot be empty while fetching."});}
 
         let savedData = await blogModel.create(req.body)
-        return res.status(201).send({ status: true, data: savedData })
+            return res.status(201).send({ status: true, data: savedData })
     } catch (error) {
         return res.status(500).send({ status: false, msg: error.message })
     }
 }
 
 
-
+    //-----------------Get list of Blog--------------------------------------------------------------------------------------------------
 const getBlogs = async function (req, res) {
     try {
         let filterQuery = { isDeleted: false, deletedAt: null, isPublished: true };
@@ -57,62 +66,23 @@ const getBlogs = async function (req, res) {
         const { authorId, category, tags, subcategory } = queryParams;
 
         if (!validator.isValidString(authorId)) {
-            return res
-                .status(400)
-                .send({ status: false, message: "Author id is required" });
-        }
+            return res.status(400).send({ status: false, message: "Author id is required" });
+        };
         if (authorId) {
             if (!validator.isValidObjectId(authorId)) {
-                return res.status(400).send({
-                    status: false,
-                    message: `authorId is not valid.`,
-                });
-            }
-        }
-
+                return res.status(400).send({status: false,message: "authorId is not valid."});
+            }};
         if (!validator.isValidString(category)) {
-            return res.status(400).send({
-                status: false,
-                message: "Category cannot be empty while fetching.",
-            });
-        }
-
+            return res.status(400).send({status: false,message: "Category cannot be empty while fetching."
+            })};
         if (!validator.isValidString(tags)) {
-            return res.status(400).send({
-                status: false,
-                message: "tags cannot be empty while fetching.",
-            });
-        }
+            return res.status(400).send({status: false,message: "tags cannot be empty while fetching."
+            }) };
         if (!validator.isValidString(subcategory)) {
-            return res.status(400).send({
-                status: false,
-                message: "subcategory cannot be empty while fetching.",
+            return res.status(400).send({status: false,message: "subcategory cannot be empty while fetching."
             });
         }
 
-        if (validator.isValidRequestBody(queryParams)) {
-            const { authorId, category, tags, subcategory } = queryParams;
-            if (validator.isValid(authorId) && validator.isValidObjectId(authorId)) {
-                filterQuery["authorId"] = authorId;
-            }
-            if (validator.isValid(category)) {
-                filterQuery["category"] = category.trim();
-            }
-            if (validator.isValid(tags)) {
-                const tagsArr = tags
-                    .trim()
-                    .split(",")
-                    .map((x) => x.trim());
-                filterQuery["tags"] = { $all: tagsArr };
-            }
-            if (validator.isValid(subcategory)) {
-                const subcatArr = subcategory
-                    .trim()
-                    .split(",")
-                    .map((subcat) => subcat.trim());
-                filterQuery["subcategory"] = { $all: subcatArr };
-            }
-        }
         const blog = await blogModel.find(filterQuery);
         console.log(blog)
 
@@ -125,10 +95,9 @@ const getBlogs = async function (req, res) {
     }
 };
 
+//----------------Update the Details of Blog-------------------------------------------------------------------------------------------
 const updateBlogs = async function (req, res) {
     try {
-
-    
         let data = req.body;
 
         if (!Object.keys(data).length > 0) {
@@ -148,7 +117,7 @@ const updateBlogs = async function (req, res) {
             return res.status(404).send({ status: false, msg: "Blog not exists" })
         };
 
-let authorId = availableBlog.authorId
+        let authorId = availableBlog.authorId
 
         let updatedData = await blogModel.findOneAndUpdate({ authorId: authorId }, {
             $set: { isPublished: true, title: data.title, body: data.body, publishedAt: new Date() },
@@ -159,7 +128,7 @@ let authorId = availableBlog.authorId
     } catch (error) { res.status(500).send({ status: false, msg: error.message }) }
 };
 
-
+//----------------------Delete Blog with Blog Id in path params------------------------------
 const deleteBlogs = async function (req, res) {
     try {
         const authorId = req.authorId
@@ -169,6 +138,7 @@ const deleteBlogs = async function (req, res) {
     } catch (error) { res.status(500).send({ status: false, msg: error.message }) }
 };
 
+//----Delete Blog with Specific filters------------------------------------------------------------------------------------
 const deleteByQuery = async function (req, res) {
     try {
         let data = req.query
