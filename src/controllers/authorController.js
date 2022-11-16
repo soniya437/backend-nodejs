@@ -1,4 +1,5 @@
 const authorModel = require('../models/authorModel');
+const jwt = require("jsonwebtoken")
 
 
 const createAuthor = async function (req, res) {
@@ -39,7 +40,34 @@ const createAuthor = async function (req, res) {
     }
 }
 
+const loginAuthor = async function(req, res){
 
+    try  { 
+       const { email, password } = req.body
+   
+       if(!Object.keys(req.body).length > 0){
+           return res.status(400).send({status: false, msg: "Please provide details for login"})
+       }
+   
+       if(!email){
+   return res.status(400).send({status: false, msg: "Provide email"})
+       }
+   
+       if(!password){
+           return res.status(400).send({status: false, msg: "Provide password"})
+               }
+   let savedData = await authorModel.findOne({ email, password }).select({_id: 1}) /// savedData = {_id: 637213c5276a332a43f57965}
+   if(!savedData){
+       return res.status(404).send({status: false, msg: "No such data"})
+   }
+   
+   let encodeToken = jwt.sign({userId: savedData}, "group7")
+   return res.status(200).send({status: true, data: encodeToken})
+   }catch(error){
+       return res.status(500).send({status: false, msg: error.message})
+   }
+   
+   }
 
 
 
@@ -51,5 +79,7 @@ const createAuthor = async function (req, res) {
 
 
 module.exports.createAuthor=createAuthor;
+
+module.exports.loginAuthor = loginAuthor;
 
 

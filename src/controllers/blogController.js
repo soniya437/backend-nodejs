@@ -1,66 +1,11 @@
 const blogModel = require('../models/blogsModel') 
-const authorModel = require('../models/authorModel')
 const validator = require("../util/validator");
+const authorModel = require('../models/authorModel');
+
 
 const mongoose = require('mongoose')
 const objectId = mongoose.isValidObjectId
 const jwt = require("jsonwebtoken")
-
-
-
-
-const loginAuthor = async function(req, res){
-
-  try  { 
-     const { email, password } = req.body
- 
-     if(!Object.keys(req.body).length > 0){
-         return res.status(400).send({status: false, msg: "Please provide details for login"})
-     }
- 
-     if(!email){
- return res.status(400).send({status: false, msg: "Provide email"})
-     }
- 
-     if(!password){
-         return res.status(400).send({status: false, msg: "Provide password"})
-             }
- let savedData = await authorModel.findOne({ email, password }).select({_id: 1}) /// savedData = {_id: 637213c5276a332a43f57965}
- if(!savedData){
-     return res.status(404).send({status: false, msg: "No such data"})
- }
- 
-let savedData1 = await blogModel.findOne({savedData})  /// savedData1 = {}
-
- let encodeToken = jwt.sign({userId: savedData1._id}, "group7")
- return res.status(200).send({status: true, data: encodeToken})
- }catch(error){
-     return res.status(500).send({status: false, msg: error.message})
- }
- 
- }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 let createBlog = async (req, res) => {
@@ -87,7 +32,7 @@ let createBlog = async (req, res) => {
         if (!objectId(authorId)) {
             return res.status(400).send({ status: false, msg: "Invalid Author ID" })
         };
-        let checkAuthorId = await blogModel.findById(authorId)
+        let checkAuthorId = await authorModel.findById(authorId)
         if(!checkAuthorId){
           return res.status(404).send({status: false, msg: "No such authorId"})
         }
@@ -182,7 +127,20 @@ const getBlogs = async function (req, res) {
 
 const updateBlogs = async function (req, res) {
     try {
-     const userTobeModified = req.userTobeModified
+    //  const userTobeModified = req.userTobeModified
+
+    let blogId = req.params.blogId
+if(!objectId(blogId)){
+    return res.status(400).send({status: true, msg: "BlogId is invalid"})
+}
+let availableBlog = await blogModel.findById(blogId);
+
+if (!availableBlog) {
+    return res.status(404).send({ status: false, msg: "No such data" });
+}
+if (availableBlog.isDeleted === true) {
+    return res.status(404).send({ status: false, msg: "Blog not exists" })
+};
        
         let data = req.body;
 
@@ -190,7 +148,7 @@ const updateBlogs = async function (req, res) {
             res.status(400).send({ status: false, msg: "Provide Data for Updation" })
         };
 
-        let updatedData = await blogModel.findOneAndUpdate({ _id: userTobeModified }, {
+        let updatedData = await blogModel.findOneAndUpdate({ _id: blogId }, {
             $set: { isPublished: true, title: data.title, body: data.body, publishedAt: new Date() },
             $push: { tags: data.tags, subcategory: data.subcategory }
         }, { new: true });
@@ -202,8 +160,19 @@ const updateBlogs = async function (req, res) {
 
 const deleteBlogs = async function (req, res) {
     try {
-      const userTobeModified = req.userTobeModified
-        await blogModel.findOneAndUpdate({ _id: userTobeModified }, { $set: { isDeleted: true, deletedAt: new Date() } });
+      let blogId = req.params.blogId
+      if(!objectId(blogId)){
+          return res.status(400).send({status: true, msg: "BlogId is invalid"})
+      }
+      let availableBlog = await blogModel.findById(blogId);
+      
+      if (!availableBlog) {
+          return res.status(404).send({ status: false, msg: "No such data" });
+      }
+      if (availableBlog.isDeleted === true) {
+          return res.status(404).send({ status: false, msg: "Blog not exists" })
+      };
+        await blogModel.findOneAndUpdate({ _id: blogId }, { $set: { isDeleted: true, deletedAt: new Date() } });
         return res.status(200).send({ status: true, msg: "Blog deleted successfully" })
 
     } catch (error) { res.status(500).send({ status: false, msg: error.message }) }
@@ -316,7 +285,6 @@ const deleteBlogs = async function (req, res) {
         }}
     
 
-module.exports.loginAuthor = loginAuthor;
 module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;
 module.exports.updateBlogs = updateBlogs

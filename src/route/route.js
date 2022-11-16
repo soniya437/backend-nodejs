@@ -7,15 +7,15 @@ const authMiddleware = require("../middlewares/authMiddleware")
 
 router.post( "/authors", authorController.createAuthor )
 
-router.post( "/login", blogController.loginAuthor )
+router.post( "/login", authorController.loginAuthor )
 
 router.post( "/blogs", authMiddleware.authentication, blogController.createBlog );
 
 router.get( "/blogs",authMiddleware.authentication, blogController.getBlogs );
 
-router.put( "/blogs/:blogId", authMiddleware.authentication, authMiddleware.authorisation, blogController.updateBlogs)
+router.put( "/blogs/:blogId", authMiddleware.authentication, blogController.updateBlogs)
 
-router.delete( "/blogs/:blogId", authMiddleware.authentication, authMiddleware.authorisation, blogController.deleteBlogs)
+router.delete( "/blogs/:blogId", authMiddleware.authentication, blogController.deleteBlogs)
 
 router.delete( "/blogs", blogController.deleteByQuery)
 

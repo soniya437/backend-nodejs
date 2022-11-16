@@ -16,7 +16,7 @@ const authentication = function (req, res, next) {
             res.status(500).send({ status: false, msg: "Invalid Token" })
         }
 
-        req.decodedToken = decodedToken.userId   //{userId: savedData1._id}
+        // req.decodedToken = decodedToken.userId   //{userId: savedData1._id}
         next()
     } catch (error) {
         return res.status(500).send({ status: false, msg: error.message })
