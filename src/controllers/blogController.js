@@ -1,7 +1,70 @@
-const blogModel = require('../models/blogsModel')
+const blogModel = require('../models/blogsModel') 
+const authorModel = require('../models/authorModel')
+const validator = require("../util/validator");
+
 const mongoose = require('mongoose')
 const objectId = mongoose.isValidObjectId
-const validator = require("../util/validator");
+const jwt = require("jsonwebtoken")
+
+
+
+
+const loginAuthor = async function(req, res){
+
+  try  { 
+     const { email, password } = req.body
+ 
+     if(!Object.keys(req.body).length > 0){
+         return res.status(400).send({status: false, msg: "Please provide details for login"})
+     }
+ 
+     if(!email){
+ return res.status(400).send({status: false, msg: "Provide email"})
+     }
+ 
+     if(!password){
+         return res.status(400).send({status: false, msg: "Provide password"})
+             }
+ let savedData = await authorModel.findOne({ email, password }).select({_id: 1}) /// savedData = {_id: 637213c5276a332a43f57965}
+ if(!savedData){
+     return res.status(404).send({status: false, msg: "No such data"})
+ }
+ 
+let savedData1 = await blogModel.find(savedData)  /// savedData1 = [{}]
+
+let arr = savedData1[i] ///{}
+
+ let encodeToken = jwt.sign({userId: arr._id}, "group7")
+ return res.status(200).send({status: true, data: encodeToken})
+ }catch(error){
+     return res.status(500).send({status: false, msg: error.message})
+ }
+ 
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 let createBlog = async (req, res) => {
 
     try {
@@ -278,7 +341,7 @@ const deleteBlogs = async function (req, res) {
         }}
     
 
-
+module.exports.loginAuthor = loginAuthor;
 module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;
 module.exports.updateBlogs = updateBlogs
