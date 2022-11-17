@@ -178,7 +178,7 @@ const deleteByQuery = async function (req, res) {
         }
         for(let i = 0; i < blogDetails.length; i++){
             if(blogDetails[i].isDeleted === true){
-                return res.send({status: false, msg: "Blog already deleted"})
+                return res.status(404).send({status: false, msg: "Blog already deleted"})
             }
         if (blogDetails[i].authorId.toString() !== tokensId) {
             return res.status(403).send({ status: false, message: `Unauthorized access` });
