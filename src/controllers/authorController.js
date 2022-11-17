@@ -1,7 +1,7 @@
 const authorModel = require('../models/authorModel');
 const jwt = require("jsonwebtoken")
-const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$/
-const regexEmail=  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,3})$/i
+const passwordRegex = /^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-]).{8,15}$/
+const regexEmail=  /^[a-z0-9_]{3,}@[a-z]{3,}[.]{1}[a-z]{3,6}$/
 
 
     // -----Create Author---------------------------------------------------------------------------------------------------------------
@@ -15,13 +15,13 @@ const createAuthor = async function (req, res) {
             return res.status(400).send({ status: false, msg: "fname is required" })};
 
     if(typeof fname !== "string" || fname.trim().length === 0){
-        return res.status(400).send({status: false, msg: "Enter valid name"})
+        return res.status(400).send({status: false, msg: "Enter valid fname"})
     }
         if (!lname) {
             return res.status(400).send({ status: false, msg: "lname is required" })};
 
-            if(typeof fname !== "string" || fname.trim().length === 0){
-                return res.status(400).send({status: false, msg: "Enter valid name"})
+            if(typeof lname !== "string" || lname.trim().length === 0){
+                return res.status(400).send({status: false, msg: "Enter valid lname"})
             }
 
         if (!title) {
@@ -72,7 +72,7 @@ const createAuthor = async function (req, res) {
         return res.status(400).send({status: false, msg: "Provide password"})};
 
         if (!password.match(passwordRegex)) {
-            return res.status(400).send({ status: false, msg: "password is required" })};
+            return res.status(400).send({ status: false, msg: "password is invalid" })};
 
     let savedData = await authorModel.findOne({ email, password })
     if(!savedData){
