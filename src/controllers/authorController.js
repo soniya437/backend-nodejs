@@ -1,6 +1,6 @@
 const authorModel = require('../models/authorModel');
 const jwt = require("jsonwebtoken")
-const passwordRegex = /^.(?=.{6,})(?=.[a-zA-Z])(?=.\d)(?=.[!&$%&? "]).*$/
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$/
 const regexEmail=  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,3})$/i
 
 
@@ -43,8 +43,8 @@ const createAuthor = async function (req, res) {
         if (!password) {
             return res.status(400).send({ status: false, msg: "password is required" })};
 
-        // if (!password.match(passwordRegex)) {
-        //     return res.status(400).send({ status: false, msg: "password is not strong" })};
+        if (!password.match(passwordRegex)) {
+            return res.status(400).send({ status: false, msg: "password is not strong" })};
 
         let savedData= await authorModel.create(req.body)
         return res.status(201).send({status: true, data: savedData})
@@ -55,7 +55,7 @@ const createAuthor = async function (req, res) {
 }
 
     // ------login Author-----------------------------------------------------------------------------------------------------------------
-const loginAuthor = async function(req, res){
+    const loginAuthor = async function(req, res){
 
     try  { 
        const { email, password } = req.body
@@ -71,8 +71,8 @@ const loginAuthor = async function(req, res){
        if(!password){
         return res.status(400).send({status: false, msg: "Provide password"})};
 
-        // if (!password.match(passwordRegex)) {
-        //     return res.status(400).send({ status: false, msg: "password is required" })};
+        if (!password.match(passwordRegex)) {
+            return res.status(400).send({ status: false, msg: "password is required" })};
 
     let savedData = await authorModel.findOne({ email, password })
     if(!savedData){
