@@ -181,7 +181,7 @@ const deleteByQuery = async function (req, res) {
                 return res.send({status: false, msg: "Blog already deleted"})
             }
         if (blogDetails[i].authorId.toString() !== tokensId) {
-            return res.status(401).send({ status: false, message: `Unauthorized access` });
+            return res.status(403).send({ status: false, message: `Unauthorized access` });
         }await blogModel.updateMany(data, { $set: { isDeleted: true, deletedAt: new Date()} })
             return res.status(200).send({ status: true, msg: "Blog deleted successfully" })}
         }
