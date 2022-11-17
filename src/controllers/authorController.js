@@ -66,7 +66,8 @@ const createAuthor = async function (req, res) {
         if(!email){
             return res.status(400).send({status: false, msg: "Provide email"})};
         if(!email.match(regexEmail)){
-            return res.status(400).send({status: false, msg: "Invalid email"})};
+            return res.status(400).send({status: false, msg: "Invalid email"})
+        }
 
        if(!password){
         return res.status(400).send({status: false, msg: "Provide password"})};
