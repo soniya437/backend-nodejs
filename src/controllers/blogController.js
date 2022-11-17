@@ -167,9 +167,9 @@ const deleteByQuery = async function (req, res) {
             return res.status(400).send({ status: false, msg: "input is required" });
         }
 
+
+        let data = {  isDeleted: false, ...query }
         let tokensId = req.decodedToken;
-        let data = { isDeleted: false, authorId:tokensId, ...query }
-        
 
         let blogDetails = await blogModel.find(data) 
         console.log(blogDetails)
@@ -177,12 +177,11 @@ const deleteByQuery = async function (req, res) {
         if (!blogDetails.length > 0) {
             return res.status(404).send({ status: false, message: `Blog not exist` });
         }
-        
-        if (blogDetails.authorId.toString() !== tokensId) {
+        for(let i = 0; i < blogDetails.length; i++){
+        if (blogDetails[i].authorId.toString() !== tokensId) {
             return res.status(401).send({ status: false, message: `Unauthorized access` });
-        }
-        await blogModel.updateMany(data, { $set: { isDeleted: true, deletedAt: new Date()} })
-            return res.status(200).send({ status: true, msg: "Blog deleted successfully" })
+        }await blogModel.updateMany(data, { $set: { isDeleted: true, deletedAt: new Date()} })
+            return res.status(200).send({ status: true, msg: "Blog deleted successfully" })}
         }
     catch (error) {
         return res.status(500).send({ status: false, error: err.msg })
