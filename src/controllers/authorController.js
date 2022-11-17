@@ -1,6 +1,6 @@
 const authorModel = require('../models/authorModel');
 const jwt = require("jsonwebtoken")
-const passwordRegex = /^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-]).{8,15}$/
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$/
 const regexEmail=  /^[a-z0-9_]{3,}@[a-z]{3,}[.]{1}[a-z]{3,6}$/
 
 
@@ -65,9 +65,7 @@ const createAuthor = async function (req, res) {
 
         if(!email){
             return res.status(400).send({status: false, msg: "Provide email"})};
-        if(!email.match(regexEmail)){
-            return res.status(400).send({status: false, msg: "Invalid email"})
-        }
+        
 
        if(!password){
         return res.status(400).send({status: false, msg: "Provide password"})};
