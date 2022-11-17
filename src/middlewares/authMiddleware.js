@@ -12,7 +12,7 @@ const authentication = function (req, res, next) {
         if (!token) return res.status(401).send({ status: false, msg: "token is not present" })
 
         let decodedToken = jwt.verify(token, "group7")
-        if (!decodedToken) {
+        if (!decodedToken){
            return res.status(401).send({ status: false, msg: "Invalid Token" })
         }
 

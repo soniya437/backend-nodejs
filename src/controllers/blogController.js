@@ -19,6 +19,8 @@ let createBlog = async (req, res) => {
         if (!title) {
             return res.status(400).send({ status: false, msg: "Title is required" })
         };
+        if(typeof title !== "string" || title.trim().length === 0){
+            return res.status(400).send({status: false, msg: "Enter valid title"})}
 
         let blogTitle = await blogModel.findOne({title: req.body.title})// unique Title of Blog
 
@@ -28,6 +30,9 @@ let createBlog = async (req, res) => {
         if (!body) {
             return res.status(400).send({ status: false, msg: "Body is required" })
         };
+        if(typeof body !== "string" || body.trim().length === 0){
+            return res.status(400).send({status: false, msg: "Enter valid body"})}
+
         if (!authorId) {
             return res.status(400).send({ status: false, msg: "Author Id is required" })
         };
@@ -42,13 +47,15 @@ let createBlog = async (req, res) => {
         if (!category) {
             return res.status(400).send({ status: false, msg: "Category is required" })
         }
-        if (!validator.isValidString(category)) {
-            return res.status(400).send({status: false,message: "Category cannot be empty while fetching."
-            })};
-        if (!validator.isValidString(tags)) {
-            return res.status(400).send({status: false,message: "tags cannot be empty while fetching."}) };
-        if (!validator.isValidString(subcategory)) {
-            return res.status(400).send({status: false,message: "subcategory cannot be empty while fetching."});}
+
+        if(typeof category !== "string" || category.trim().length === 0){
+            return res.status(400).send({status: false, msg: "Enter valid category"})}
+
+            if(typeof tags !== "string" || tags.trim().length === 0){
+                return res.status(400).send({status: false, msg: "Enter valid tags"})}
+
+                if(typeof subcategory !== "string" || subcategory.trim().length === 0){
+                    return res.status(400).send({status: false, msg: "Enter valid subcategory"})}
 
         let savedData = await blogModel.create(req.body)
             return res.status(201).send({ status: true, data: savedData })
@@ -61,7 +68,7 @@ let createBlog = async (req, res) => {
     //-----------------Get list of Blog--------------------------------------------------------------------------------------------------
 const getBlogs = async function (req, res) {
     try {
-        let filterQuery = { isDeleted: false, deletedAt: null, isPublished: true };
+        let filterQuery = { isDeleted: false, isPublished: true };
         let queryParams = req.query;
         const { authorId, category, tags, subcategory } = queryParams;
 
@@ -141,81 +148,33 @@ const deleteBlogs = async function (req, res) {
 //----Delete Blog with Specific filters------------------------------------------------------------------------------------
 const deleteByQuery = async function (req, res) {
     try {
-        let data = req.query
-         if (!Object.keys(data).length)
-           return res.status(400).send({ status: false, msg: "No user input" })
+        let query = req.query;
+    if (Object.keys(query).length == 0) {
+        return res.status(400).send({ status: false, msg: "input is required" });
+      }
+  
 
-        //let filter = { isDeleted: false, isPublished: true, ...data }
-        //let tokenId = req.decodedToken
-        
-        let data1 = {
-            isDeleted: false,
-            authorId: req.decodedToken//authorLoggedIn is present in request that we have set in authorization middleware it contains loggedIn AuthorId
-        }
-        data1['$or'] = [
-            { title: data.title },
-            { isPublished: data.isPublished },
-            { authorId: data.authorId },
-            { category: data.category },
-            { subcategory: data.subcategory },
-            { tags: data.tags }
-        ]
-
-        let modification = await blogModel.find(data1)
-        if (modification.length == 0) {
-            return res.status(404).send({ status: true, msg: "No such blog present or user is not authorised" })
-        }
-        // let blogDetail = await blogModel.findOne(filter)
-        
-        // console.log(blogDetail)//.authorId.toString())
-        // if( !blogDetail) {return res.status(400).send({status:false, msg: "Blog not exist"})}
-        // //-----------------------------------Authorisation ----------------------------------
-        // if(blogDetail.authorId.toString() !== tokenId){
-        //     console.log(tokenId)
-        //     return res.status(403).send({status:false,msg: "Unauthorised"})
-        // }
-        //-----------------------------------------------------------------------------------
-        // let findDocsById = await blogModel.find(filter).select({ _id: 1 })
-        // if (!findDocsById.length){
-        //     return res.status(404).send({ status: false, msg: "Blog already deleted" })}
-
-        let deleteBlog = await blogModel.updateMany(
-            { $set: { isDeleted: true, deletedAt: new Date( ) } }, { new: true })
-            res.status(200).send({ status: true, msg:"Blog deleted successfully" })
-
-
-
-    // let query = req.query;
-    // let data = {isPublished: true, isDeleted: false, ...query}
-    // let tokensId = req.decodedToken;
+    let data = {isPublished: false, isDeleted: false, ...query}
+    let tokensId = req.decodedToken;
     
-    // if (Object.keys(query) == 0) {
-    //   return res.status(404).send({ status: false, msg: "input is required" });
-    // }
-
+    let blogDetails = await blogModel.findOne(data)
     
-    // let blogDetails = await blogModel.findOne(data)
+    if ( !blogDetails ) {
+      return res
+      .status(404)
+      .send({ status: false, message: `Blog not exist`});
+    }
+    if ( blogDetails.authorId.toString() !== tokensId) {
+      return res
+      .status(401)
+      .send({ status: false, message: `Unauthorized access` });
+    }
     
-    // if ( !blogDetails ) {
-    //   return res
-    //   .status(400)
-    //   .send({ status: false, message: `Blog not exist`});
-    // }
-    // if ( blogDetails.authorId.toString() !== tokensId) {
-    //   return res
-    //   .status(401)
-    //   .send({ status: false, message: `Unauthorized access` });
-    // }
-    
-    // let deleteBlogs = await blogModel.updateMany(data, {
-    //   $set: { isdeleted: true  },
-    // });
+   await blogModel.updateMany(data, {
+      $set: { isdeleted: true, deletedAt: new Date()  },
+    });
 
-    // if (deleteBlogs["matchedCount"] === 0) {
-    //   return res.status(404).send({ status: false, msg: "Blog not exist" });
-    // }
-
-    // res.status(200).send({ status: false, msg: "Blog deleted successfully" });
+    res.status(200).send({ status: false, msg: "Blog deleted successfully" });
     }
     catch (err) {
         console.log(err.message)

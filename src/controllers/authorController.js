@@ -1,33 +1,36 @@
 const authorModel = require('../models/authorModel');
 const jwt = require("jsonwebtoken")
 const validator = require('../util/validator')
-const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$/
-const regexEmail=  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+const passwordRegex = /^.(?=.{6,})(?=.[a-zA-Z])(?=.\d)(?=.[!&$%&? "]).*$/
+const regexEmail=  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,3})$/i
 
 
     // -----Create Author---------------------------------------------------------------------------------------------------------------
 const createAuthor = async function (req, res) {
     try {
         let { fname, lname, title, email, password } = req.body;
-        if(!Object.keys(req.body).length>0){
+        if(!Object.keys(req.body).length > 0){
             return res.status(400).send({status: false, msg : "Provide Details"})
         }
         if (!fname) {
             return res.status(400).send({ status: false, msg: "fname is required" })};
 
-        if (!fname.match(/^[a-z]+$/i)) {
-            return res.status(400).send({ status: false, msg: "Invalid First Name" })};
-
+    if(typeof fname !== "string" || fname.trim().length === 0){
+        return res.status(400).send({status: false, msg: "Enter valid name"})
+    }
         if (!lname) {
             return res.status(400).send({ status: false, msg: "lname is required" })};
 
-        if (!lname.match(/^[a-z]+$/i)) {
-            return res.status(400).send({ status: false, msg: "Invalid last Name" })}
+            if(typeof fname !== "string" || fname.trim().length === 0){
+                return res.status(400).send({status: false, msg: "Enter valid name"})
+            }
 
         if (!title) {
             return res.status(400).send({ status: false, msg: "title is required" })};
 
-        if(!validator.isValidTitle.includes(title))
+        if(!["Mr", "Mrs", "Miss"].includes(title)){
+            return res.status(400).send({ status: false, msg: "title is not valid" })}
+
         if (!email) {
             return res.status(400).send({ status: false, msg: "email is required" })};
 
@@ -41,8 +44,8 @@ const createAuthor = async function (req, res) {
         if (!password) {
             return res.status(400).send({ status: false, msg: "password is required" })};
 
-        if (!password.match(passwordRegex)) {
-            return res.status(400).send({ status: false, msg: "password is required" })};
+        // if (!password.match(passwordRegex)) {
+        //     return res.status(400).send({ status: false, msg: "password is not strong" })};
 
         let savedData= await authorModel.create(req.body)
         return res.status(201).send({status: true, data: savedData})
@@ -69,10 +72,10 @@ const loginAuthor = async function(req, res){
        if(!password){
         return res.status(400).send({status: false, msg: "Provide password"})};
 
-        if (!password.match(passwordRegex)) {
-            return res.status(400).send({ status: false, msg: "password is required" })};
+        // if (!password.match(passwordRegex)) {
+        //     return res.status(400).send({ status: false, msg: "password is required" })};
 
-    let savedData = await authorModel.findOne({ email, password }) /// savedData = {_id}
+    let savedData = await authorModel.findOne({ email, password })
     if(!savedData){
        return res.status(404).send({status: false, msg: "No such data"}) };
 
