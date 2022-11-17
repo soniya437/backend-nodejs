@@ -90,9 +90,7 @@ if(queryParams.authorId)
             return res.status(400).send({ status: false, msg: "Invalid Author ID" })}
         };
         
-        const blogData = await blogModel.find({$or: [{ authorId: queryParams.authorId},
-         {category: queryParams.category}, {tags: queryParams.tags}, {subcategory: queryParams.subcategory}]});
-
+        const blogData = await blogModel.find({$or:[{isDeleted:false, isPublished:true}, queryParams]});
 
         if ( !blogData.length > 0) {
             return res.status(404).send({ status: false, message: "No blogs found" });
@@ -113,13 +111,14 @@ const updateBlogs = async function (req, res) {
         let data = req.body;
 
         if (!Object.keys(data).length > 0) {
-            res.status(400).send({ status: false, msg: "Provide Data for Updation" })
+            return res.status(400).send({ status: false, msg: "Provide Data for Updation" })
         }
 
         if (data.title) {
-            if (typeof data.title !== "string" || data.title.trim().length === 0) {
-                return res.status(400).send({ status: false, msg: "Enter valid title to update" })
-            }
+
+            if(typeof data.title !== "string" || data.title.trim().length === 0){
+                return res.status(400).send({status: false, msg: "Enter valid title"})
+             }
         }
 
         if (data.body) {
@@ -177,9 +176,8 @@ const deleteByQuery = async function (req, res) {
             return res.status(404).send({ status: false, message: `Blog not exist` });
         }
         for(let i = 0; i < blogDetails.length; i++){
-            if(blogDetails[i].isDeleted === true){
-                return res.status(404).send({status: false, msg: "Blog already deleted"})
-            }
+            
+            
         if (blogDetails[i].authorId.toString() !== tokensId) {
             return res.status(403).send({ status: false, message: `Unauthorized access` });
         }await blogModel.updateMany(data, { $set: { isDeleted: true, deletedAt: new Date()} })

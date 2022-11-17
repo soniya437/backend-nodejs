@@ -14,9 +14,9 @@ const createAuthor = async function (req, res) {
         if (!fname) {
             return res.status(400).send({ status: false, msg: "fname is required" })};
 
-    if(typeof fname !== "string" || fname.trim().length === 0){
-        return res.status(400).send({status: false, msg: "Enter valid fname"})
-    }
+        if(typeof fname !== "string" || fname.trim().length === 0){
+           return res.status(400).send({status: false, msg: "Enter valid fname"})
+        }
         if (!lname) {
             return res.status(400).send({ status: false, msg: "lname is required" })};
 
