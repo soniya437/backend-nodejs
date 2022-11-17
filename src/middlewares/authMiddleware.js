@@ -40,16 +40,16 @@ if (availableBlog.isDeleted === true) {
 };
 
 let authorId = availableBlog.authorId
+console.log(authorId)
 
 let decodedToken = req.decodedToken
-let userTobeModified = decodedToken.userId
+console.log(decodedToken)
 
-
-if(userTobeModified !== authorId.toString() ){
+if(decodedToken !== authorId.toString() ){
     return res.status(403).send({status: false, msg: "Unauthorised user"})
 }
 
-//req.authorId = authorId
+req.authorId = authorId
 
 
 next()

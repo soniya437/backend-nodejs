@@ -80,7 +80,7 @@ const loginAuthor = async function(req, res){
        return res.status(404).send({status: false, msg: "No such data"}) };
 
    //--------create token ----------------------------------------------------------------------------------------------------------------
-    let encodeToken = jwt.sign({userId: savedData._id.toString()}, "group7")
+    let encodeToken = jwt.sign({userId: savedData._id}, "group7")
       return res.status(200).send({status: true, data: encodeToken})
     }catch(error){
        return res.status(500).send({status: false, msg: error.message})

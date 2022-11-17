@@ -75,42 +75,41 @@ const getBlogs = async function (req, res) {
     try {
         let filterQuery = { isDeleted: false, isPublished: true };
         let queryParams = req.query;
-        const { authorId, category, tags, subcategory } = queryParams;
 
+    if(!Object.keys(queryParams).length > 0){
+        let savedData = await blogModel.find(filterQuery)
+    if(!savedData.length > 0) return res.status(404).send({status: false, msg: "No data found"})
+    return res.status(200).send({status: true, msg: savedData})
+}
 
-
-        if (!objectId(authorId)) {
-            return res.status(400).send({ status: false, msg: "Invalid Author ID" })
-        };
-        let checkAuthorId = await authorModel.findById(authorId);
-        if (!checkAuthorId) {
-            res.status(404).send({ status: false, msg: "AuthorId is not found" })
-        };
-        filterQuery.authorId = authorId
+// if(!queryParams)
+        // {
+            
+        //     if (!objectId(queryParams.authorId)) {
+        //     return res.status(400).send({ status: false, msg: "Invalid Author ID" })
+        // };
         
-        if (typeof tags !== "string" || tags.trim().length === 0) {
-            return res.status(400).send({ status: false, msg: "Data not found with this category" })
-        };
-        filterQuery.category = category
+        // if (typeof queryParams.category !== "string" || queryParams.category.trim().length === 0) {
+        //     return res.status(400).send({ status: false, msg: "Data not found with this category" })
+        // };
 
-        if (typeof tags !== "string" || tags.trim().length === 0) {
-            return res.status(400).send({ status: false, msg: "Data not found with this tags" })
-        };
-        filterQuery.tags = tags
+        // if (typeof queryParams.tags !== "string" || queryParams.tags.trim().length === 0) {
+        //     return res.status(400).send({ status: false, msg: "Data not found with this tags" })
+        // };
 
-        if (typeof subcategory !== "string" || subcategory.trim().length === 0) {
-            return res.status(400).send({ status: false, msg: "Data not found with this subcategory" })
-        };
-        filterQuery.subcategory = subcategory
+        // if (typeof queryParams.subcategory !== "string" || queryParams.subcategory.trim().length === 0) {
+        //     return res.status(400).send({ status: false, msg: "Data not found with this subcategory" })
+        // };
+        const blogData = await blogModel.find({$or: [{ authorId: queryParams.authorId}, {category: queryParams.category}, {tags: queryParams.tags}, {subcategory: queryParams.subcategory}]});
+        
 
-        const blog = await blogModel.find(filterQuery);
-        console.log(blog)
-
-        if ( blog.length === 0) {
+        if ( !blogData.length > 0) {
             return res.status(404).send({ status: false, message: "No blogs found" });
         }
-        res.status(200).send({ status: true, message: "Blogs list", data: blog });
-    } catch (error) {
+      return res.status(200).send({ status: true, data: blogData })
+    }
+    
+ catch (error) {
         res.status(500).send({ status: false, Error: error.message });
     }
 };
@@ -118,27 +117,31 @@ const getBlogs = async function (req, res) {
 //----------------Update the Details of Blog-------------------------------------------------------------------------------------------
 const updateBlogs = async function (req, res) {
     try {
+        const authorId = req.authorId
+
         let data = req.body;
 
         if (!Object.keys(data).length > 0) {
             res.status(400).send({ status: false, msg: "Provide Data for Updation" })
-        };
-        let blogId = req.params.blogId
-
-        if (!objectId(blogId)) {
-            return res.status(400).send({ status: true, msg: "BlogId is invalid" })
         }
-        let availableBlog = await blogModel.findById(blogId)
 
-        if (!availableBlog) {
-            return res.status(404).send({ status: false, msg: "No such data" });
-        }
-        if (availableBlog.isDeleted === true) {
-            return res.status(404).send({ status: false, msg: "Blog not exists" })
-        };
+if(data.title){
+        if (typeof data.title !== "string" || data.title.trim().length === 0) {
+            return res.status(400).send({ status: false, msg: "Enter valid title to update" })
+        }}
 
-        let authorId = availableBlog.authorId
+       if(data.body) {if (typeof data.body !== "string" || data.body.trim().length === 0) {
+            return res.status(400).send({ status: false, msg: "Enter valid body to update" })
+        }}
 
+       if(data.tags){ if (typeof data.tags !== "string" || data.tags.trim().length === 0) {
+            return res.status(400).send({ status: false, msg: "Enter valid tags to update" })
+        }}
+
+       if(data.subcategory){ if (typeof data.subcategory !== "string" || data.subcategory.trim().length === 0) {
+            return res.status(400).send({ status: false, msg: "Enter valid subcategory to update" })
+        }}
+     
         let updatedData = await blogModel.findOneAndUpdate({ authorId: authorId }, {
             $set: { isPublished: true, title: data.title, body: data.body, publishedAt: new Date() },
             $push: { tags: data.tags, subcategory: data.subcategory }
