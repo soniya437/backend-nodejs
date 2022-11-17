@@ -17,7 +17,9 @@ tags: [String],
 category:  {
     type: String,
     required: true}, 
-subcategory: [String],
+subcategory: {
+    type: [String],
+required: true},
 
 isDeleted: {
     type: Boolean, 

@@ -1,6 +1,5 @@
 const authorModel = require('../models/authorModel');
 const jwt = require("jsonwebtoken")
-const validator = require('../util/validator')
 const passwordRegex = /^.(?=.{6,})(?=.[a-zA-Z])(?=.\d)(?=.[!&$%&? "]).*$/
 const regexEmail=  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,3})$/i
 

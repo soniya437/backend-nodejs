@@ -27,6 +27,9 @@ const authentication = function (req, res, next) {
 const authorisation = async function(req, res, next){
 
 let blogId = req.params.blogId
+if(!blogId){
+    return res.status(400).send({status: true, msg: "BlogId not present"})
+}
 if(!objectId(blogId)){
     return res.status(400).send({status: true, msg: "BlogId is invalid"})
 }
@@ -40,10 +43,8 @@ if (availableBlog.isDeleted === true) {
 };
 
 let authorId = availableBlog.authorId
-console.log(authorId)
 
 let decodedToken = req.decodedToken
-console.log(decodedToken)
 
 if(decodedToken !== authorId.toString() ){
     return res.status(403).send({status: false, msg: "Unauthorised user"})
