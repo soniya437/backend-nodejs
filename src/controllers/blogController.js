@@ -166,9 +166,9 @@ const deleteByQuery = async function (req, res) {
             return res.status(400).send({ status: false, msg: "input is required" });
         }
 
-
-        let data = {...query }
         let tokensId = req.decodedToken;
+        let data = {isDeleted: false, authorId: tokensId, ...query }
+    
 
         let blogDetails = await blogModel.find(data)
 
