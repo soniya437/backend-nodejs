@@ -173,7 +173,7 @@ const deleteByQuery = async function (req, res) {
                     }
 
         let tokensId = req.decodedToken;
-        let data = {isDeleted: false, authorId: tokensId, ...query }
+        let data = {authorId: tokensId, ...query }
 
         
     
@@ -181,11 +181,17 @@ const deleteByQuery = async function (req, res) {
         let blogDetails = await blogModel.find(data)
 
         if (!blogDetails.length > 0) {
-            return res.status(404).send({ status: false, message: `Blog not exist` })
+            return res.status(404).send({ status: false, message: `Blog not exist` });
         }
-  
+        for(let i = 0; i < blogDetails.length; i++){
+            if(blogDetails[i].isDeleted === true){
+                return res.status(400).send({status: false, msg: "Blog is already deleted"})
+            }
+    await blogModel.updateMany(data, { $set: { isDeleted: true, deletedAt: new Date()} })
             return res.status(200).send({ status: true, msg: "Blog deleted successfully" })
-        }catch (error) {
+        }}
+        
+    catch (error) {
         return res.status(500).send({ status: false, error: err.msg })
     }
 }
