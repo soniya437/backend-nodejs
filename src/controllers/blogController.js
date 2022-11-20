@@ -161,43 +161,41 @@ const deleteBlogs = async function (req, res) {
 //----Delete Blog with Specific filters------------------------------------------------------------------------------------
 const deleteByQuery = async function (req, res) {
     try {
-        let query = req.query;
+        let query = req.query
         if (Object.keys(query).length == 0) {
             return res.status(400).send({ status: false, msg: "input is required" });
         }
 
-        if(query.authorId){
-            if(!objectId(query.authorId)){
-                return res.status(400).send({status: false, msg: "Invalid authorId"})
+        if (query.authorId) {
+            if (!objectId(query.authorId)) {
+                return res.status(400).send({ status: false, msg: "Invalid authorId" })
             }
-                    }
-
-        let tokensId = req.decodedToken;
-        console.log(tokensId)
-        let data = {authorId: tokensId, ...query }
-        console.log(data)
-
-        
-    
-
-        let blogDetails = await blogModel.find(data)
-        console.log(blogDetails)
-        if (!blogDetails.length > 0) {
-            return res.status(404).send({ status: false, message: `Blog not exist` });
         }
-        for(let i = 0; i < blogDetails.length; i++){
-            if(blogDetails[i].isDeleted === true){
-                return res.status(400).send({status: false, msg: "Blog is already deleted"})
-            }
-    await blogModel.updateMany(data, { $set: { isDeleted: true, deletedAt: new Date()} })
-            return res.status(200).send({ status: true, msg: "Blog deleted successfully" })
-        }}
-        
-    catch (error) {
-        return res.status(500).send({ status: false, error: error.message })
-    }
-}
 
+
+        let blogDetails = await blogModel.find(query)
+        if (!blogDetails.length > 0) {
+            return res.status(404).send({ status: false, message: "Blog not exist" });
+        }
+        for (let i = 0; i < blogDetails.length; i++) {
+            let tokensId = req.decodedToken
+            if (blogDetails[i].authorId.toString() !== tokensId) {
+                return res.status(403).send({ status: false, msg: "Unauthorised User" })
+            }
+            if (blogDetails[i].isDeleted === true) {
+                return res.status(404).send({ status: false, msg: "Blog already deleted" })
+            }
+            await blogModel.updateMany(query, { $set: { isDeleted: true, deletedAt: new Date() } })
+            return res.status(200).send({ status: true, msg: "Blog deleted successfully" })
+
+
+        }
+
+
+    } catch (error) {
+        return res.status(500).send({ status: false, error: error.message })
+   }
+}
 
 module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;
