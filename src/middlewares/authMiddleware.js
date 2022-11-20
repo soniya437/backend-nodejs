@@ -22,7 +22,7 @@ const authentication = function (req, res, next) {
 
 // --------------------Authorisation---------------------------------------------------------------------------------------------------------------
 const authorisation = async function(req, res, next){
-
+try{
 let blogId = req.params.blogId
 if(!blogId){
     return res.status(400).send({status: true, msg: "BlogId not present"})
@@ -35,9 +35,7 @@ let availableBlog = await blogModel.findById(blogId)
 if (!availableBlog) {
     return res.status(404).send({ status: false, msg: "No such data" });
 }
-if (availableBlog.isDeleted === true) {
-    return res.status(404).send({ status: false, msg: "Blog not exists" })
-};
+
 
 let authorId = availableBlog.authorId
 
@@ -46,11 +44,17 @@ let decodedToken = req.decodedToken
 if(decodedToken !== authorId.toString() ){
     return res.status(403).send({status: false, msg: "Unauthorised user"})
 }
+if (availableBlog.isDeleted === true) {
+    return res.status(404).send({ status: false, msg: "Blog not exists" })
+};
 
-req.authorId = authorId
+req.blogId = blogId
 
 
-next()
+next()}
+catch(error){
+    res.status(500).send({status: false, msg: error.message})
+}
 }
 
 
