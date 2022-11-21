@@ -79,7 +79,8 @@ const createAuthor = async function (req, res) {
 
    //--------create token ----------------------------------------------------------------------------------------------------------------
     let encodeToken = jwt.sign({userId: savedData._id}, "group7")
-      return res.status(200).send({status: true, data: encodeToken})
+      return res.status(201).send({status: true, data: encodeToken})
+
     }catch(error){
        return res.status(500).send({status: false, msg: error.message})
    }
