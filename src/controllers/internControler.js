@@ -7,8 +7,7 @@ const mobileRegex =/^(\+\d{1,3}[- ]?)?\d{10}$/;
 
 
 const createInterns = async function (req, res) {
-
-
+    res.setHeader('Access-Control-Allow-Origin','*')
     try {
         let { name, email, mobile, collegeId, collegeName, isDeleted} = req.body;
 
@@ -21,6 +20,7 @@ const createInterns = async function (req, res) {
         if (email) {
             if (!emailRegex.test(email)) return res.status(400).send({ status: false, msg: "Invalid Emailid" })
         }
+
         let findemail = await internModels.find({ email: email })
         if (findemail.length > 0) return res.status(400).send({ status: false, msg: "email id is already exist" })
 
@@ -39,9 +39,9 @@ const createInterns = async function (req, res) {
 
         collegeId = collegeNames._id
 
-        let data = { name, email, mobile, collegeId, isDeleted }
+        let data1 = { name, email, mobile, collegeId, isDeleted }
 
-        const internData = await internModels.create(data);
+        const internData = await internModels.create(data1);
 
         res.status(201).send({ status: true, message: "Registration Successfull", data: internData })
 

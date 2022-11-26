@@ -6,9 +6,8 @@
 const collegeModel = require('../models/collegeModel')
 const internModels=require('../models/internModel')
 
-
-
 const college = async function (req, res) {
+    res.setHeader('Access-Control-Allow-Origin','*')
     try {
         const data = req.body
         const { name, fullName, logoLink} = data
@@ -22,7 +21,7 @@ const college = async function (req, res) {
 
         if(nameExist) { return res.status(400).send({status:false, message:" College is already exist"})}
 
-        if(!nameRegex1.test(fullName)) {return res.status(400).send({status:false, message:"fullName is not Valid, use Alphabets"})}
+        //if(!nameRegex1.test(fullName)) {return res.status(400).send({status:false, message:"fullName is not Valid, use Alphabets"})}
         
         if(!pattern.test(logoLink)){
             return res.status(400).send({status:false,msg:"Please provide a valid link"})
@@ -36,13 +35,18 @@ const college = async function (req, res) {
     }
 }
 
+
+
 const getcollegedetail = async (req, res) => {
+    
     try {
+        res.setHeader('Access-Control-Allow-Origin','*')
         let { collegeName } = req.query
 
         if (!collegeName) return res.status(400).send({ status: true, Message: "Please Enter College name" })
 
         let findnameindb = await collegeModel.findOne({ $or:[{name: collegeName}, {fullName:collegeName}] })
+        console.log(findnameindb)
         if (!findnameindb) return res.status(404).send({ status: true, Message: "College Name not found, please enter valid name" })
 
 
@@ -53,7 +57,7 @@ const getcollegedetail = async (req, res) => {
 
         let newobj = { name: findnameindb.name, fullName: findnameindb.fullName, logoLink: findnameindb.logoLink, interns: findnameindb.interns }
 
-        res.status(200).send({ status: true, Data: newobj })
+        res.status(200).send({ status: true, data: newobj })
     } catch (error) {
         res.status(500).send({ status: false, Message: error.message })
     }
