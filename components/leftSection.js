@@ -11,7 +11,7 @@ export default function LeftSection({
 }) {
 
     const {
-        fullName,
+       fullName,
         logoLink:collegeLogo
     } = collegeDetails
 
