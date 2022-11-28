@@ -81,7 +81,7 @@ const loginUser = async function (req, res) {
         if (!userData) {
             return res.status(400).send({ status: false, msg: "incorrect email or password" })
         }
-        const token = jwt.sign({ userId: userData._id.toString() }, "projectsecretcode")
+        const token = jwt.sign({ userId: userData._id.toString() }, "projectsecretcode" , {exp: Math.floor(Date.now() / 1000) + (60 * 60)})
         return res.status(200).send({ status: true, msg: "succesfull logged in", token: token })
     }
     catch (error) {
