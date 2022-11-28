@@ -4,6 +4,19 @@ const userModel = require('../model/userModel');
     const validateEmail = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email));
     const validatePassword = (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(password))
     const validatePhone = ((/^(\+\d{1,3}[- ]?)?\d{10}$/.test(phone)))
+    //----------------------------------------vallidationPassword-----------------------
+    const isValidpass = function (value) { // function for password validation
+
+        if (typeof value == 'undefined' || value == 'null')
+            return false
+        let nameCheck = /^[a-zA-Z0-9@#!$%^&*_-]{3,10}$/.test(value)
+        if (nameCheck == false) {
+            return false
+        }
+        if (typeof value == 'string' && value.trim().length >= 1)
+            return true
+    
+    }
 
 const createUser = async function  (req, res) {
     try {
@@ -39,5 +52,26 @@ const createUser = async function  (req, res) {
         res.status(500).send({ status: false, msg: error.message });
     }
 }
+const loginUser = async function (req, res) {
+    const { email, password } = req.body
+    try {
+        if (!email || !password) {
+            return res.status(400).send({ status: false, msg: "mail id or password is required" })
+        }
+        if (!isValidpass(password)) {
+            return res.status(400).send({ status: false, msg: "Please provide a valid password." })
+        }
+        const userData = await userModel.findOne({ email: email, password: password })
+        if (!userData) {
+            return res.status(400).send({ status: false, msg: "incorrect email or password" })
+        }
+        const token = jwt.sign({ userId: userData._id.toString() }, "projectsecretcode")
+        return res.status(200).send({ status: true, msg: "succesfull logged in",token:token })
+    }
+    catch (error) {
+        return res.status(500).send({ status: false, msg: error.message })
+    }
+}
+module.exports.loginUser=loginUser
 
 module.exports.createUser =createUser
