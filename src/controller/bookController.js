@@ -1,24 +1,25 @@
-const bookModel = require('../Models/bookModel')
+const bookModel = require("../model/bookModel")
 const moment = require('moment')
 
 
 const createBook = async function (req, res) {
     try {
         let data = req.body;
-        let { name, title, excerpt, userId, ISBN, catogory, subcategory } = data
+        let {title, excerpt, userId, ISBN, category, subcategory } = data
 
         if (Object.keys(data) == 0) {
             return res.status(400).send({ status: false, message: "Give some data for book" })
         }
 
-        if (!name || !title || !excerpt || !userId || !ISBN || !catogory || !subcategory) return res.status(400).send({ status: false, message: "Mandatory fields are required" })
+        if (!title || !excerpt || !userId || !ISBN || !category || !subcategory ) return res.status(400).send({ status: false, message: "Mandatory fields are required" })
 
         data.releasedAt = moment().format("YYYY-MM-DD")
 
-        let saveData = await bookModel.creat(data)
+        let saveData = await bookModel.create(data)
         return res.status(201).send({ status: true, data: saveData })
     }
     catch (err) {
+
         return res.status(500).send({ status: false, message: err.message })
     }
 };

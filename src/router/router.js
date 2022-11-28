@@ -3,15 +3,17 @@ const router = express.Router()
 const userController = require('../controller/userController')
 const bookController = require('../controller/bookController')
 
+const {authentication} = require('../middleware/middleware')
+
 
 router.post("/register" , userController.createUser)
 router.post("/login",userController.loginUser)
 
 
-router.post("/books" , bookController.createBook)
+router.post("/books" ,authentication , bookController.createBook)
 
 
-router.get("/books" ,bookController.getBooks)
+router.get("/books" ,authentication ,bookController.getBooks)
 
 
 module.exports = router

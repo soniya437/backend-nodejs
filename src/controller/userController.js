@@ -1,14 +1,9 @@
 
 // // Model
 const userModel = require('../model/userModel');
+const jwt = require('jsonwebtoken')
 
 
-
-
-let nameValidation = (/^[a-zA-Z]+([\s][a-zA-Z]+)*$/.test(name));
-const validateEmail = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email));
-const validatePassword = (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(password))
-const validatePhone = ((/^(\+\d{1,3}[- ]?)?\d{10}$/.test(phone)))
 
 
 
@@ -21,12 +16,11 @@ const isValidpass = function (value) { // function for password validation
 
     if (typeof value == 'undefined' || value == 'null')
         return false
-    let nameCheck = /^[a-zA-Z0-9@#!$%^&*_-]{3,10}$/.test(value)
+    
     if (nameCheck == false) {
         return false
     }
-    if (typeof value == 'string' && value.trim().length >= 1)
-        return true
+    if (typeof value == 'string' && value.trim().length >= 1)return true
 
 }
 
@@ -43,6 +37,14 @@ const createUser = async function (req, res) {
 
         if (!name || !email || !phone || !password) return res.status(400).send({ status: false, msg: "Mandatory fields are required" })
 
+
+
+                
+
+        const nameValidation = (/^[a-zA-Z]+([\s][a-zA-Z]+)*$/.test(name));
+        const validateEmail = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email));
+        const validatePassword = (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(password))
+        const validatePhone = ((/^(\+\d{1,3}[- ]?)?\d{10}$/.test(phone)))
 
 
         if (typeof name !== "string" || !nameValidation)
@@ -69,19 +71,27 @@ const createUser = async function (req, res) {
 
 
 const loginUser = async function (req, res) {
-    const { email, password } = req.body
     try {
+        const { email, password } = req.body
+
+        const validateEmail = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email));
+        const validatePassword = (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(password))
+
+
         if (!email || !password) {
             return res.status(400).send({ status: false, msg: "mail id or password is required" })
         }
-        if (!isValidpass(password)) {
+
+        if(!validateEmail) return res.status(400).send({ status: false, msg: "Please provide a valid Email." })
+
+        if (!validatePassword) {
             return res.status(400).send({ status: false, msg: "Please provide a valid password." })
         }
         const userData = await userModel.findOne({ email: email, password: password })
         if (!userData) {
             return res.status(400).send({ status: false, msg: "incorrect email or password" })
         }
-        const token = jwt.sign({ userId: userData._id.toString() }, "projectsecretcode" , {exp: Math.floor(Date.now() / 1000) + (60 * 60)})
+        const token = jwt.sign({ userId: userData._id.toString() }, "projectsecretcode" , { expiresIn: '1h' })
         return res.status(200).send({ status: true, msg: "succesfull logged in", token: token })
     }
     catch (error) {

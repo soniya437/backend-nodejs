@@ -3,8 +3,6 @@ const objectId = mongoose.Types.ObjectId
 
 const blogSchema = new mongoose.Schema({
 
-    // // ALL Keys
-
     title: {
         type : String ,
         required : true ,
@@ -18,7 +16,7 @@ const blogSchema = new mongoose.Schema({
     userId:{
         type : objectId ,
         required : true ,
-        ref : ""
+        ref : "user"
     },
     ISBN : {
         type : String ,
@@ -30,14 +28,17 @@ const blogSchema = new mongoose.Schema({
         required : true
     },
     subcategory :{
-        type : [string] ,
+        type : [String] ,
         required : true
     },
     reviews : {type : Number , default : 0} ,
-    deletedAt : null ,
+    deletedAt : {
+        type : Date,
+        default : null
+    } ,
     isDeleted:{type : Boolean , default : false} ,
     releasedAt:{
-        type : date ,
+        type : Date ,
         required : true 
     }
 
