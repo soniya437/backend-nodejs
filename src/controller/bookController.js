@@ -1,6 +1,7 @@
 const bookModel = require("../model/bookModel")
 const moment = require('moment')
 
+// // //    /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
 
 const createBook = async function (req, res) {
     try {
@@ -13,7 +14,9 @@ const createBook = async function (req, res) {
 
         if (!title || !excerpt || !userId || !ISBN || !category || !subcategory ) return res.status(400).send({ status: false, message: "Mandatory fields are required" })
 
-        data.releasedAt = moment().format("YYYY-MM-DD")
+
+        const today = moment()        
+        data.releasedAt =  today.format('YYYY-MM-DD')
 
         let saveData = await bookModel.create(data)
         return res.status(201).send({ status: true, data: saveData })

@@ -12,7 +12,7 @@ const jwt = require('jsonwebtoken')
 
 
 
-const isValidpass = function (value) { // function for password validation
+const isValidpass = function (value) { 
 
     if (typeof value == 'undefined' || value == 'null')
         return false
@@ -37,10 +37,6 @@ const createUser = async function (req, res) {
 
         if (!name || !email || !phone || !password) return res.status(400).send({ status: false, msg: "Mandatory fields are required" })
 
-
-
-                
-
         const nameValidation = (/^[a-zA-Z]+([\s][a-zA-Z]+)*$/.test(name));
         const validateEmail = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email));
         const validatePassword = (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(password))
@@ -55,12 +51,11 @@ const createUser = async function (req, res) {
         if (!validatePassword) return res.status(400).send({ status: false, msg: "use a strong password at least =>  one special, one Uppercase, one lowercase (character) one numericValue and password must be eight characters or longer)" });
 
 
-        let findnumber = await userModel.find({ phone: phone })
+        let uniqueData = await userModel.findOne({ $or : {phone: phone , email: email } })
 
-        let findemail = await userModel.find({ email: email })
 
-        if (findnumber.length > 0) return res.status(400).send({ status: false, msg: "mobile no. is already exist" })
-        if (findemail.length > 0) return res.status(400).send({ status: false, msg: "email id is already exist" })
+        if (!uniqueData) return res.status(400).send({ status: false, msg: "Mobile Numner or Email is already exist" })
+     
 
         let saveData = await userModel.create(data)
         res.status(201).send({ status: true, msg: saveData })
