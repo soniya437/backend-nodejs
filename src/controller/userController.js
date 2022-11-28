@@ -36,16 +36,17 @@ const createUser = async function (req, res) {
         if (!isValidEntry(password) || !validatePassword.test(password)) return res.status(400).send({ status: false, message: "use a strong password at least =>  one special, one Uppercase, one lowercase (character) one numericValue and password must be eight characters or longer)" });
 
 
-        let uniqueData = await userModel.findOne({ $or : {phone: phone , email: email } })
+        let uniqueData = await userModel.findOne({ $or : [{phone: phone} , {email: email }] })
 
 
-        if (!uniqueData) return res.status(400).send({ status: false, message: "Mobile Numner or Email is already exist" })
+        if (uniqueData) return res.status(400).send({ status: false, message: "Mobile Numner or Email is already exist" })
      
 
         let saveData = await userModel.create(data)
         res.status(201).send({ status: true, message: saveData })
 
     } catch (error) {
+        console.log(error.message)
         res.status(500).send({ status: false, message: error.message });
     }
 }
