@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const objectId = mongoose.Types.ObjectId
 
-const blogSchema = new mongoose.Schema({
+const bookSchema = new mongoose.Schema({
 
     title: {
         type : String ,
@@ -47,4 +47,4 @@ const blogSchema = new mongoose.Schema({
 
 
 
-module.exports = mongoose.model("book" , blogSchema )
+module.exports = mongoose.model("book" , bookSchema )

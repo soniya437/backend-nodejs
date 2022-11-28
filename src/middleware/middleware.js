@@ -10,13 +10,10 @@ const authentication = function (req, res, next) {
     try {
         let token = req.headers['x-api-key']
         if (!token) return res.status(404).send({ status:false , message : "Token is not present in header"})
-
-        
-        let payloadData ;
-        // console.log(token)
+      
         let verifytoken = jwt.verify( token, "projectsecretcode" , function(err , decoded){
             if(err){
-                return res.status(401).send({status : false , message : "Authentication failed."})
+                return res.status(401).send({status : false , message : "Authentication failed.(or token is valid for only 1H)"})
             }
             else{
 
