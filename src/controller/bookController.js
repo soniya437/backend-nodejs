@@ -36,7 +36,7 @@ const getBooks = async function (req, res) {
         let query = req.query
 
         for (let key in query) {
-            if (key != "userId" && key !== "category", key !== "") return res.status(400).send({ status: false, message: "Invalid key name in query params only userId , category , subcategory is allowed" })
+            if (key != "userId" && key !== "category", key !== "subcategory") return res.status(400).send({ status: false, message: "Invalid key name in query params only userId , category , subcategory is allowed" })
         }
 
         let findObj = { isDeleted: false, ...query }
