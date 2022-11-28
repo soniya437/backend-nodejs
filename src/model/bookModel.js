@@ -29,6 +29,18 @@ const blogSchema = new mongoose.Schema({
         type : String ,
         required : true
     },
+    subcategory :{
+        type : [string] ,
+        required : true
+    },
+    reviews : {type : Number , default : 0} ,
+    deletedAt : null ,
+    isDeleted:{type : Boolean , default : false} ,
+    releasedAt:{
+        type : date ,
+        required : true 
+    }
+
 
 
 
