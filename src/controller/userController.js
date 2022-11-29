@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 
 
 const nameValidation = (/^[a-zA-Z]+([\s][a-zA-Z]+)*$/);
-const validateEmail = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+const validateEmail = (/^([a-z0-9._%-]+@[a-z0-9.-]+\.[a-z]{2,6})*$/);
 const validatePassword = (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/)
 const validatePhone = (/^(\+\d{1,3}[- ]?)?\d{10}$/)
 
