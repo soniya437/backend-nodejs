@@ -22,12 +22,10 @@ const createUser = async function (req, res) {
         if (!title) return res.status(400).send({ status: false, msg: "title is mandatory" })
         if ((title !== "Mr" && title !== "Mrs" && title !== "Miss")) return res.status(400).send({ status: false, message: "give title only ['Mr'/ 'Mrs'/'Miss']" });
 
-        // if (!name || !email || !phone || !password) return res.status(400).send({ status: false, message: "Mandatory fields are required" })
 
-
+        if (!isValidEntry(name) || !nameValidation.test(name)) return res.status(400).send({ status: false, message: "please enter a valid name" })
         if (!isValidEntry(phone) || !validatePhone.test(phone)) return res.status(400).send({ status: false, message: "Please enter valid Phone Number" })
         if (!isValidEntry(email) || !validateEmail.test(email)) return res.status(400).send({ status: false, message: "Email is invalid, Please check your Email address" });
-        if (!isValidEntry(name) || !nameValidation.test(name)) return res.status(400).send({ status: false, message: "please enter a valid name" })
         if (!isValidEntry(password) || !validatePassword.test(password)) return res.status(400).send({ status: false, message: "use a strong password at least =>  one special, one Uppercase, one lowercase (character) one numericValue and password must be eight characters or longer)" });
 
 
