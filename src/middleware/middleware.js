@@ -51,7 +51,6 @@ const authorisation = async function (req, res, next) {
 
         if(! bookData ) return res.status(404).send({status : false , msg :"BookId is not exist in DB."})
 
-     
         let userInBook = bookData.userId
 
         if (tokenUserId.toString() !== userInBook.toString()) return res.status(403).send({ status: false, msg: "Unauthorized person , forbidden" })

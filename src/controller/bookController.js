@@ -3,21 +3,22 @@ const mongoose = require('mongoose')
 const objectId = mongoose.Types.ObjectId
 
 
+//-------------------------*** Models import ***-----------------//
 
 const bookModel = require("../model/bookModel")
 const userModel = require('../model/userModel')
 
-
+//------------------------*** Improtant Regex ***----------------//
 const  isbnRegex =   (/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/)
 const excerptRegex = (/^([A-Za-z ]){3,}$/)
 const releasedAtRegex = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
 
 
-
+//-------------------*** Function for valid entry ***--------------------//
 const {isValidEntry} = require('../validator/validator')
 
 
-
+//--------------------------------------------------*** Create Book ***-------------------------------------------------------------------//
 const createBook = async function (req, res) {
     try {
         let data = req.body;
@@ -72,7 +73,7 @@ const createBook = async function (req, res) {
     }
 };
 
-
+//-------------------------------------*** Get All Book ***----------------------------------------------------------------------------//
 const getBooks = async function (req, res) {
 
     try {
@@ -105,10 +106,11 @@ const getBooks = async function (req, res) {
 
 
 
-
+//------------------------------*** Get Book by BookID ***--------------------------------------------------------------------------//
 const getBooksById = async function (req, res) {
     try {
         let bookId = req.params.bookId
+        if(!bookId) return res.status(400).send({ status: false, msg: "Please give a bookId in path params" })
         if (!objectId.isValid(bookId)) return res.status(400).send({ status: false, msg: "Please give a Valid bookId " })
 
         let allBooks = await bookModel.findById({ _id: bookId }).select({__v : 0})
@@ -133,10 +135,11 @@ const getBooksById = async function (req, res) {
 
 
 
-
+//-------------------------------*** Update Book by BookID ***------------------------------------------------------------------//
 const updateBookById = async function (req, res) {
     try {
         let bookId = req.params.bookId
+        if(!bookId) return res.status(400).send({ status: false, msg: "Please give a bookId in path params" })
         if (!objectId.isValid(bookId)) return res.status(400).send({ status: false, message: "Please give a Valid bookId " })
 
         let checkId = await bookModel.findById(bookId)
@@ -156,7 +159,7 @@ const updateBookById = async function (req, res) {
 
         if(alreadyData) return res.status(400).send({status : false , message : "Title , excerpt , ISBN is already present in DB"})
 
-        const updatedBook = await bookModel.findOneAndUpdate(
+        const updatedBook = await bookModel.findByIdAndUpdate(
             { _id: bookId },
             { $set: { title: title, excerpt: excerpt, releasedAt: releasedAt, ISBN: ISBN , releasedAt : releasedAt } },
             { new: true })
@@ -171,10 +174,11 @@ const updateBookById = async function (req, res) {
 
 
 
-
+//-----------------------------*** Delete Book by BookID ***-----------------------------------------------------------------------------//
 const deleteBookById = async function (req, res) {
     try {
         let bookId = req.params.bookId
+        if(!bookId) return res.status(400).send({ status: false, msg: "Please give a bookId in path params" })
         if (!objectId.isValid(bookId)) return res.status(400).send({ status: false, msg: "Please give a Valid bookId " })
 
         let checkBookId = await bookModel.findById(bookId)
@@ -182,8 +186,6 @@ const deleteBookById = async function (req, res) {
         if(!checkBookId) return res.status(404).send({status : false , message : "Data not found with given bookId"})
 
         if (checkBookId.isDeleted === true) return  res.status(404).send({ status: false, msg: "Book is already deleted" })
-
-        
 
         let deleteBook = await bookModel.findByIdAndUpdate({ _id: bookId }, { $set: { isDeleted: true, deletedAt: Date.now() } }, { new: true })
         return res.status(200).send({ status: true, msg: "Book deleted successfully", data: deleteBook })

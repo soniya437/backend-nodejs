@@ -1,8 +1,10 @@
-const userModel = require('../model/userModel');
 const jwt = require('jsonwebtoken')
 
+//-------------------------*** Model import ***-----------------//
+const userModel = require('../model/userModel');
 
 
+//------------------------*** Improtant Regex ***----------------//
 const nameValidation = (/^[a-zA-Z]+([\s][a-zA-Z]+)*$/);
 const validateEmail = (/^([a-z0-9._%-]+@[a-z0-9.-]+\.[a-z]{2,6})*$/);
 const validatePassword = (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/)
@@ -12,7 +14,7 @@ const validatePhone = (/^(\+\d{1,3}[- ]?)?\d{10}$/)
 const {isValidEntry} = require('../validator/validator')
 
 
-
+//--------------------------------------------------*** Create User ***-------------------------------------------------------------------//
 const createUser = async function (req, res) {
     try {
         let data = req.body
@@ -44,6 +46,8 @@ const createUser = async function (req, res) {
 }
 
 
+
+//--------------------------------------------------*** LogIn User ***-------------------------------------------------------------------//
 const loginUser = async function (req, res) {
     try {
         const { email, password } = req.body
