@@ -52,6 +52,10 @@ const createBook = async function (req, res) {
             data.releasedAt =  moment() .format('YYYY-MM-DD')
         }
 
+        if(data.isDeleted){
+            data.deletedAt = Date.now()
+        }
+
         let saveData = await bookModel.create(data)
         return res.status(201).send({ status: true, data: saveData })
     }
@@ -104,7 +108,7 @@ const getBooksById = async function (req, res) {
      
         if (allBooks.isDeleted == true) return res.status(404).send({ status: false, msg: "Book is already deleted" })
 
-        console.log(allBooks)
+        // console.log(allBooks)
 
 
         let objForReviewData = {

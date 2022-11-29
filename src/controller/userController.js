@@ -33,7 +33,7 @@ const createUser = async function (req, res) {
 
         let uniqueData = await userModel.findOne({ $or : [{phone: phone} , {email: email }] })
 
-        if (uniqueData) return res.status(400).send({ status: false, message: "Mobile Numner or Email is already exist" })
+        if (uniqueData) return res.status(400).send({ status: false, message: "Mobile Number or Email is already exist" })
      
 
         let saveData = await userModel.create(data)
@@ -56,10 +56,8 @@ const loginUser = async function (req, res) {
 
         const userData = await userModel.findOne({ email: email, password: password })
 
-        if (!userData) {
-            return res.status(400).send({ status: false, message: "incorrect email or password" })
-        }
-
+        if (!userData) return res.status(400).send({ status: false, message: "incorrect email or password" })
+        
         const token = jwt.sign({ userId: userData._id.toString() }, "projectsecretcode" , { expiresIn: '1h' })
 
         return res.status(200).send({ status: true, message: "succesfull logged in", token: token })
