@@ -22,8 +22,7 @@ const createUser = async function (req, res) {
         if (!title) return res.status(400).send({ status: false, msg: "title is mandatory" })
         if ((title !== "Mr" && title !== "Mrs" && title !== "Miss")) return res.status(400).send({ status: false, message: "give title only ['Mr'/ 'Mrs'/'Miss']" });
 
-        if (!name || !email || !phone || !password) return res.status(400).send({ status: false, message: "Mandatory fields are required" })
-
+        // if (!name || !email || !phone || !password) return res.status(400).send({ status: false, message: "Mandatory fields are required" })
 
 
         if (!isValidEntry(phone) || !validatePhone.test(phone)) return res.status(400).send({ status: false, message: "Please enter valid Phone Number" })

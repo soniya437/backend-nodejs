@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken")
 
 
-// const blogModel = require("../model/blogModel")
-// const mongoose = require('mongoose');
+const bookModel = require('../model/bookModel')
+const mongoose = require('mongoose');
 
 
 const authentication = function (req, res, next) {
@@ -37,41 +37,35 @@ const authentication = function (req, res, next) {
 
 
 
-// const authorisation = async function (req, res, next) {
+const authorisation = async function (req, res, next) {
 
 
-//     try {
+    try {
 
-//         let tokenAuthorId = req.tokenAuthorId
-//         let blogId = req.params.blogId
+        let tokenUserId = req.tokenUserId
+        let bookId = req.params.bookId
         
-//         // console.log(tokenAuthorId)
-//         // console.log()
-//         if (!mongoose.Types.ObjectId.isValid(blogId)) return res.status(400).send({ Status: false, msg: "Invalid Blog Id." })
+        if (!mongoose.Types.ObjectId.isValid(bookId)) return res.status(400).send({ Status: false, msg: "Invalid Book Id." })
 
-//         let blogData = await blogModel.findById(blogId)
+        let bookData = await bookModel.findById(bookId)
 
-//         if(! blogData ) return res.status(400).send({status : false , msg :"BlogId is not exist in DB."})
+        if(! bookData ) return res.status(404).send({status : false , msg :"BookId is not exist in DB."})
 
-//         // console.log(blogData)
+     
+        let userInBook = bookData.userId
 
-//         let authorInBlog = blogData.authorId
-
-//         // console.log(authorInBlog, blogData.authorId)
-
-//         if (authorInBlog.toString() !== tokenAuthorId.toString()) return res.status(403).send({ status: false, msg: "Unauthorize person , forbidden" })
+        if (tokenUserId.toString() !== userInBook.toString()) return res.status(403).send({ status: false, msg: "Unauthorized person , forbidden" })
 
 
-//         next()
+        next()
 
-//     } catch (err) { 
-//         // console.log(err.message)
-//         res.status(500).send({ status: false, msg: err.message })
-//     }
+    } catch (err) { 
+        res.status(500).send({ status: false, msg: err.message })
+    }
 
 
-// }
+}
 
 
 
-module.exports = { authentication }
+module.exports = { authentication , authorisation}
