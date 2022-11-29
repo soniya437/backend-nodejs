@@ -1,10 +1,7 @@
-
-// // Model
 const userModel = require('../model/userModel');
 const jwt = require('jsonwebtoken')
 
 
-const {isValidEntry} = require('../validator/validator')
 
 const nameValidation = (/^[a-zA-Z]+([\s][a-zA-Z]+)*$/);
 const validateEmail = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
@@ -12,8 +9,7 @@ const validatePassword = (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*
 const validatePhone = (/^(\+\d{1,3}[- ]?)?\d{10}$/)
 
 
-
-
+const {isValidEntry} = require('../validator/validator')
 
 
 
@@ -37,7 +33,6 @@ const createUser = async function (req, res) {
 
 
         let uniqueData = await userModel.findOne({ $or : [{phone: phone} , {email: email }] })
-
 
         if (uniqueData) return res.status(400).send({ status: false, message: "Mobile Numner or Email is already exist" })
      
@@ -74,6 +69,9 @@ const loginUser = async function (req, res) {
         return res.status(500).send({ status: false, message: error.message })
     }
 }
+
+
+
 
 
 module.exports = {createUser , loginUser}

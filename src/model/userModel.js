@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema({
     },
     name: { 
         type: String, 
-        required : true
+        required : true,
+        trim: true
 
     },
 
@@ -24,11 +25,13 @@ const userSchema = new mongoose.Schema({
         type : String , 
         required : true,
         unique:true,
+        trim: true
     }, 
     password: {
         type : String , 
         required : true,
         unique:true,
+        trim: true
     },
     address: {
       street: String,
