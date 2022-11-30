@@ -37,7 +37,7 @@ const createUser = async function (req, res) {
      
 
         let saveData = await userModel.create(data)
-        res.status(201).send({ status: true, message: saveData })
+        res.status(201).send({ status: true, message: 'Success', data : saveData })
 
     } catch (error) {
         console.log(error.message)
