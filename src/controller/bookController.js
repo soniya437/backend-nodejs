@@ -140,7 +140,7 @@ const getBooksById = async function (req, res) {
 const updateBookById = async function (req, res) {
     try {
         let bookId = req.params.bookId
-        if(!bookId) return res.status(400).send({ status: false, msg: "Please give a bookId in path params" })
+
         if (!objectId.isValid(bookId)) return res.status(400).send({ status: false, message: "Please give a Valid bookId " })
 
         let checkId = await bookModel.findById(bookId)
@@ -151,6 +151,14 @@ const updateBookById = async function (req, res) {
         if (Object.keys(details).length == 0) return res.status(400).send({ status: false, message: "Please give Details in body" })
 
         let { title , excerpt , ISBN , releasedAt } = details
+
+        if(excerpt){
+            if(!excerptRegex.test(excerpt)) return res.status(400).send({status : false , message : " Invalid Excerpt (Excerpt only contain Alphabet and space.)."})
+        }
+
+        if(ISBN){
+            if(!isbnRegex.test(ISBN)) return res.status(400).send({status : false , message : " Invalid ISBN."})
+        }
 
         if(releasedAt){   
             if(!releasedAtRegex.test(releasedAt)) return res.status(400).send({status : false , message : "Please provide valid releasedAt value in form --> (2022-11-27)"})
