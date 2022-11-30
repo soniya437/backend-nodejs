@@ -33,7 +33,10 @@ router.delete("/books/:bookId", authentication , authorisation , bookController.
 
 router.post("/books/:bookId/review" , revewController.postReview )
 router.put("/books/:bookId/review/:reviewId" , revewController.updateReview )
-router.delete("/books/:bookId/review/:reviewId" , revewController.deleteReview )
+router.delete("/books/:bookId/review/:reviewId", revewController.deleteReview )
+
+
+
 
 
 
