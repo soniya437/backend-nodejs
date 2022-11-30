@@ -27,16 +27,16 @@ router.put("/books/:bookId" , authentication, authorisation, bookController.upda
 
 router.delete("/books/:bookId", authentication , authorisation , bookController.deleteBookById)
 
+
 //-----------------------*** Review API's ***----------------------------------------------------//
-
-
-
 router.post("/books/:bookId/review" , revewController.postReview )
+
 router.put("/books/:bookId/review/:reviewId" , revewController.updateReview )
+
 router.delete("/books/:bookId/review/:reviewId", revewController.deleteReview )
 
 
-
+router.all("/*", (req,res)=>{return res.status(400).send({status:false, message:"Path not found"})})
 
 
 

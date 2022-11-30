@@ -3,7 +3,6 @@ const objectId = mongoose.Types.ObjectId
 
 const userSchema = new mongoose.Schema({
 
-    // // ALL Keys
     title: {
         type: String, 
         enum:["Mr", "Mrs", "Miss"],
