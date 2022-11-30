@@ -32,7 +32,7 @@ router.delete("/books/:bookId", authentication , authorisation , bookController.
 
 
 router.post("/books/:bookId/review" , revewController.postReview )
-
+router.delete('/books/:bookId/review/:reviewId', revewController.deleteReview)
 
 
 

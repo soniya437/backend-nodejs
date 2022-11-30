@@ -11,27 +11,30 @@ const nameValidation = (/^[a-zA-Z ]+([\s][a-zA-Z ]+)*$/);
 
 const postReview = async function(req ,res){
 
-    let bookId = req.params.bookId
+    let bookIdInParams = req.params.bookId
 
     let body = req.body
     body.reviewedAt = Date.now()
+    body.bookId = bookIdInParams
 
-    let {reviewedBy , rating , review} =  body
+    let {reviewedBy , rating } =  body
 
     // // Validation may be here--->(Like manage => name , rating , given bookId in path params should match with body bookId )
 
+
+    
     if(!nameValidation.test(reviewedBy))  return res.status(400).send({ status: false, message: "Please give right name in reviewedBy,ex->'John cena' "})
+    
+
+    if(!rating) return res.status(400).send({status: false, message: "Please give rating for this book in b/t 1 to 5"})
 
     if(rating < 1 || rating > 5) return res.status(400).send({ status: false, message: "Please give a rating in b/w 1 to 5"})
 
 
-    if (!objectId.isValid(bookId)) return res.status(400).send({ status: false, message: "Please give a Valid bookId in path params" })
-    if (!objectId.isValid(body.bookId)) return res.status(400).send({ status: false, message: "Please give a Valid bookId in request body." })
-
-    if(bookId !== body.bookId) return res.status(400).send({status : false , message : "bookId in path params is not matched with bookId given in request body."})
+    if (!objectId.isValid(bookIdInParams)) return res.status(400).send({ status: false, message: "Please give a Valid bookId in path params" })
 
 
-    let bookPresent = await bookModel.findById(bookId)
+    let bookPresent = await bookModel.findById(bookIdInParams)
 
     if(! bookPresent) return res.status(404).send({status : false , message : "No Book found with given bookId."})
 
@@ -40,7 +43,7 @@ const postReview = async function(req ,res){
 
     let createReview = await reviewModel.create(body)
 
-    let incBookReview =await  bookModel.findByIdAndUpdate({_id : bookId} , {$inc : {reviews : 1}})
+    let incBookReview =await  bookModel.findByIdAndUpdate({_id : bookIdInParams} , {$inc : {reviews : 1}})
 
     let resultObj = {
         ...incBookReview._doc,
@@ -50,9 +53,34 @@ const postReview = async function(req ,res){
     res.status(201).send({status : true , message : "Review created." , data : resultObj})
 
 }
+//-------------------------------------------delete review-------------------
+const deleteReview=async function(req,res){
+    try{
+        //const queryParams=req.query
+        //const reqBody=req.body
+        const bookId=req.params.bookId
+        const reviewId=req.reviewId
+        const reviewbyReviewId=await reviewModel.findOne({_id:reviewId,isDeleted:false})
+        if (!reviewbyReviewId) {
+            return res.status(404).send({ status: false, message: `No review found by ${reviewId}` });
+        }
+        if (reviewbyReviewId.bookId != bookId) {
+            return res.status(400).send({ status: false, message: "review is not from this book" })
+        }
+        const markReview=await reviewModel.findByIdUpdate(reviewId,{$set:{isDeleted:true}},{new:true})
+
+const updateRviewCount=await bookModel.findByIdAndUpdate(bookId,{$inc:{reviews:-1}},{new:true})
+return res.statu(200).send({status:true,message: "review has been successfully deleted" })
+    }
+
+catch(error){
+ return res.status(500).send({ error: error.message })
+}
+}
 
 
 
 
 
-module.exports = {postReview}
+
+module.exports = {postReview,deleteReview}
