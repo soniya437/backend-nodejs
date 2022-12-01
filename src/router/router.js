@@ -36,7 +36,7 @@ router.put("/books/:bookId/review/:reviewId" , revewController.updateReview )
 router.delete("/books/:bookId/review/:reviewId", revewController.deleteReview )
 
 
-router.all("/*", (req,res)=>{return res.status(400).send({status:false, message:"Path not found"})})
+router.all("/*", (req,res)=>{return res.status(400).send({status:false, message:"Url invaild(Path not found) "})})
 
 
 

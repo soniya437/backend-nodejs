@@ -22,7 +22,7 @@ const createUser = async function (req, res) {
         let { title, name, email, phone, password, address } = data
 
 
-        if (!title) return res.status(400).send({ status: false, msg: "title is mandatory" })
+        if (!title) return res.status(400).send({ status: false, message: "title is mandatory" })
         if ((title !== "Mr" && title !== "Mrs" && title !== "Miss")) return res.status(400).send({ status: false, message: "give title only ['Mr'/ 'Mrs'/'Miss']" });
 
 
@@ -39,7 +39,7 @@ const createUser = async function (req, res) {
      
 
         let saveData = await userModel.create(data)
-        res.status(201).send({ status: true, message: 'Success', data : saveData })
+        res.status(201).send({ status: true, message: 'Successfully register', data : saveData })
 
     } catch (error) {
         console.log(error.message)
@@ -62,7 +62,7 @@ const loginUser = async function (req, res) {
 
         if (!userData) return res.status(400).send({ status: false, message: "incorrect email or password" })
         
-        const token = jwt.sign({ userId: userData._id.toString() }, "projectsecretcode" , { expiresIn: '1h' })
+        const token = jwt.sign({ userId: userData._id.toString() }, "projectsecretcode" , { expiresIn: '24h' })
 
         return res.status(200).send({ status: true, message: "succesfull logged in", token: token })
     }
