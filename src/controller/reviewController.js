@@ -126,19 +126,19 @@ const deleteReview = async function (req, res) {
 
         if (!objectId.isValid(bookId)) return res.status(400).send({ status: false, message: "Please give a Valid bookId in path params" })
 
-        const bookData = await bookModel.findOne({ _id: bookId  })
-        if (!bookData) return res.status(404).send({ status: false, message: "Book not found or deleted" });
+        const bookData = await bookModel.findById(bookId )
 
-        if(bookData.isDeleted== true) return res.status(404).send({message:"Book not found or Deleted"})
+        if (!bookData) return res.status(404).send({ status: false, message: "Book not found or deleted" });
+        if(bookData.isDeleted== true) return res.status(404).send({  status: false , message:"Book is already deleted"})
 
         if (!objectId.isValid(reviewId)) return res.status(400).send({ status: false, message: "Please give a Valid reviewId in path params" })
 
-        const reviewbyReviewId = await reviewModel.findOne({ _id: reviewId })
+        const reviewbyReviewId = await reviewModel.findById(reviewId)
+
         if (!reviewbyReviewId) return res.status(404).send({ status: false, message: `No review found by ${reviewId} or review is already deleted.` });
+        if(reviewbyReviewId.isDeleted== true) return res.status(404).send({ status: false , message:"Review is already deleted"})        
 
-        if(reviewbyReviewId.isDeleted== true) return res.status(404).send({message:"Review not found or Deleted"})        
-
-        if (reviewbyReviewId.bookId != bookId) return res.status(400).send({ status: false, message: "review is not from this book" })
+        if (reviewbyReviewId.bookId != bookId) return res.status(400).send({ status: false, message: "Review is not from this book" })
 
         const markReviewDelete = await reviewModel.findByIdAndUpdate(reviewId, { $set: { isDeleted: true } }, { new: true })
 
@@ -156,11 +156,6 @@ const deleteReview = async function (req, res) {
         return res.status(500).send({ error: error.message })
     }
 }
-
-
-
-
-
 
 
 
