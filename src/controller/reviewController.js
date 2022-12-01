@@ -152,9 +152,4 @@ const deleteReview = async function (req, res) {
 
 
 
-
-
-
-
-
 module.exports = { postReview, updateReview, deleteReview }

@@ -9,6 +9,7 @@ const nameValidation = (/^[a-zA-Z]+([\s][a-zA-Z]+)*$/);
 const validateEmail = (/^([a-z0-9._%-]+@[a-z0-9.-]+\.[a-z]{2,6})*$/);
 const validatePassword = (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/)
 const validatePhone = (/^(\+\d{1,3}[- ]?)?\d{10}$/)
+const pinCodeRegex = (/^\d{4}$|^\d{6}$/)
 
 
 const {isValidEntry} = require('../validator/validator')
@@ -18,7 +19,7 @@ const {isValidEntry} = require('../validator/validator')
 const createUser = async function (req, res) {
     try {
         let data = req.body
-        let { title, name, email, phone, password } = data
+        let { title, name, email, phone, password, address } = data
 
 
         if (!title) return res.status(400).send({ status: false, msg: "title is mandatory" })
@@ -30,6 +31,7 @@ const createUser = async function (req, res) {
         if (!isValidEntry(email) || !validateEmail.test(email)) return res.status(400).send({ status: false, message: "Email is invalid, Please check your Email address" });
         if (!isValidEntry(password) || !validatePassword.test(password)) return res.status(400).send({ status: false, message: "use a strong password at least =>  one special, one Uppercase, one lowercase (character) one numericValue and password must be eight characters or longer)" });
 
+        if(!pinCodeRegex.test(address.pincode))  return res.status(400).send({ status: false, message: "Given pin code in invalid , ex-->123456 , in 4 to 6 digit" });
 
         let uniqueData = await userModel.findOne({ $or : [{phone: phone} , {email: email }] })
 
