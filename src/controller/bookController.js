@@ -77,7 +77,6 @@ const getBooks = async function (req, res) {
 
     try {
 
-
         let query = req.query
 
         for (let key in query) {
@@ -92,11 +91,7 @@ const getBooks = async function (req, res) {
         if (allBook.length <= 0) return res.status(404).send({ status: false, message: "No book found (With given query)" })
 
 
-        res.status(200).send({
-            status: true,
-            message: 'Books list',
-            data: allBook
-        })
+        res.status(200).send({status: true , message: 'Books list' , data: allBook})
 
     } catch (err) {
         res.status(500).send({ status: false, message: err.message });
@@ -111,19 +106,16 @@ const getBooksById = async function (req, res) {
         let bookId = req.params.bookId
         if (!objectId.isValid(bookId)) return res.status(400).send({ status: false, message: "Please give a Valid bookId " })
 
-        let allBooks = await bookModel.findById(bookId).select({__v : 0})
+        let allBooks = await bookModel.findById(bookId).select({__v : 0}).lean()
         if(!allBooks) return res.status(404).send({ status: false, message: "Books not found with this Id" })
      
         if (allBooks.isDeleted == true) return res.status(404).send({ status: false, message: "Book is already deleted" })
 
         let allReviewOfBookId = await reviewModel.find({bookId : bookId , isDeleted : false })
 
-        let resultObj = {
-            ...allBooks._doc,
-            reviewData : allReviewOfBookId  // // For now 0 review
-        }
+        allBooks.reviewData = allReviewOfBookId      // // Creating one more attribute in mongoose object After using lean()
 
-        res.status(200).send({ status: true , message :"Success" , data: resultObj })
+        res.status(200).send({ status: true , message :"Success" , data: allBooks })
     }
     catch (err) {
         res.status(500).send({ status: "error", message: err.message })
@@ -167,7 +159,9 @@ const updateBookById = async function (req, res) {
         const updatedBook = await bookModel.findByIdAndUpdate(
             { _id: bookId },
             { $set: { title: title, excerpt: excerpt, releasedAt: releasedAt, ISBN: ISBN , releasedAt : releasedAt } },
-            { new: true })
+            { new: true }
+        )
+
         return res.status(200).send({ status: true , message: 'Success', data: updatedBook })
     }
     catch (err) {

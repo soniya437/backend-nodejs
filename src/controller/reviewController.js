@@ -46,14 +46,11 @@ const postReview = async function (req, res) {
             bookIdInParams ,
             { $inc: { reviews: 1 }, },
             { new: true }
-        ).select({ __v: 0 })
+        ).select({ __v: 0 }).lean()
 
-        let resultObj = {
-            ...incBookReview._doc,
-            reviewData: createReview
-        }
+        incBookReview.reviewData = createReview      // // Creating one more attribute in mongoose object After using lean()
 
-        res.status(201).send({ status: true, message: "Review created.", data: resultObj })
+        res.status(201).send({ status: true, message: "Review created.", data: incBookReview })
 
     } catch (err) {
         return res.status(500).send({ status: false, message: err.message });
@@ -72,10 +69,10 @@ const updateReview = async function (req, res) {
         if (!objectId.isValid(booksId)) return res.status(400).send({ status: false, message: "Please give a Valid bookId in path params" })
         if (!objectId.isValid(reviewId)) return res.status(400).send({ status: false, message: "Please give a Valid reviewId in path params" })
 
-        const bookData = await bookModel.findOne({ _id: booksId }).select({ __v: 0 })
-        if (!bookData) return res.status(404).send({ status: false, message: "Book not found" });
+        const bookData = await bookModel.findOne({ _id: booksId }).select({ __v: 0 }).lean()
+        if (!bookData) return res.status(404).send({ status: false, message: "Book not found" })
 
-        if (bookData.isDeleted == true) return res.status(404).send({ status: false, message: "This book is no longer Exists" });
+        if (bookData.isDeleted == true) return res.status(404).send({ status: false, message: "This book is no longer Exists" })
 
         const reviewData = await reviewModel.findOne({ _id: reviewId }).select({ __v: 0 , createdAt:0, updatedAt:0})
         if (!reviewData) return res.status(404).send({ status: false, message: "No review found with this reviewId." });
@@ -103,13 +100,10 @@ const updateReview = async function (req, res) {
             return res.status(400).send({ status: false, message: "Please provide some data that you want to update" });
         }
 
-        let resultObj = {
-            ...bookData._doc,
-            reviewData: reviewData
-        }
+        bookData.reviewData = reviewData    // // Creating one more attribute in mongoose object After using lean()
 
 
-        return res.status(200).send({ status: true, message: "SuccessFully Updated", data: resultObj });
+        return res.status(200).send({ status: true, message: "SuccessFully Updated", data: bookData });
 
     } catch (err) {
         return res.status(500).send({ status: false, message: err.message });
@@ -142,14 +136,11 @@ const deleteReview = async function (req, res) {
 
         const markReviewDelete = await reviewModel.findByIdAndUpdate(reviewId, { $set: { isDeleted: true } }, { new: true })
 
-        const updateRviewCount = await bookModel.findByIdAndUpdate(bookId, { $inc: { reviews: -1 } }, { new: true })
+        const updateRviewCount = await bookModel.findByIdAndUpdate(bookId, { $inc: { reviews: -1 } }, { new: true }).lean()
 
-        let resultObj = {
-            ...updateRviewCount._doc,
-            reviewData: markReviewDelete
-        }
+        updateRviewCount. reviewData = markReviewDelete     // // Creating one more attribute in mongoose object After using lean()
 
-        return res.status(200).send({ status: true, message: "Review Deleted Successfully",resultObj })
+        return res.status(200).send({ status: true, message: "Review Deleted Successfully",updateRviewCount })
     }
 
     catch (error) {
