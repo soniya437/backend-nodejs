@@ -18,7 +18,8 @@ const bookSchema = new mongoose.Schema({
     userId:{
         type : objectId ,
         required : true ,
-        ref : "user"
+        ref : "user" ,
+        trim: true
     },
     ISBN : {
         type : String ,
@@ -32,6 +33,7 @@ const bookSchema = new mongoose.Schema({
     },
     subcategory :{
         type : String ,
+        trim: true,
         required : true
     },
     reviews : {type : Number , default : 0} ,

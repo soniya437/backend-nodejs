@@ -83,10 +83,17 @@ const getBooks = async function (req, res) {
             if (key != "userId" && key !== "category" && key !== "subcategory") return res.status(400).send({ status: false, message: "Invalid key name in query params only userId , category , subcategory is allowed" })
         }
 
-        let findObj = { isDeleted: false, ...query }
+        
+        let findObj = { isDeleted: false , ...query }
+
+        // // Below line for trim() userId value. 
+        let userId = req.query.userId
+        if(userId){
+            findObj.userId = userId.trim()
+        }
 
         
-        let allBook = await bookModel.find(findObj).select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1,  reviews: 1 , releasedAt : 1 }).sort({ title: 1 })
+        let allBook = await bookModel.find(findObj).select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1,  reviews: 1 , releasedAt : 1 }).sort({ title: 1 })
         
         if (allBook.length <= 0) return res.status(404).send({ status: false, message: "No book found (With given query)" })
 
