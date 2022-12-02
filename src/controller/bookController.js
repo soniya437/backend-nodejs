@@ -89,7 +89,8 @@ const getBooks = async function (req, res) {
         // // Below line for trim() userId value. 
         let userId = req.query.userId
         if(userId){
-            findObj.userId = userId.trim()
+            findObj.userId= userId.trim()
+            if(!objectId.isValid(userId)) return res.status(400).send({status : false , message : "Given userId is invalid."})
         }
 
         
