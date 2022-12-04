@@ -44,7 +44,7 @@ const createBook = async function (req, res) {
             if(!releasedAtRegex.test(releasedAt)) return res.status(400).send({status : false , message : "Please provide valid releasedAt value in form --> (2022-11-27) or skip"})
         }
 
-        if(data.isDeleted){
+        if(data.isDeleted == true){
             data.deletedAt = Date.now()
         }
 

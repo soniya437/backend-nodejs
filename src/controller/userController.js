@@ -34,7 +34,7 @@ const createUser = async function (req, res) {
         if(address){
             let {pincode , city , street} = address
 
-            if(pincode && !pinCodeRegex.test(pincode))  return res.status(400).send({ status: false, message: "Given pin code in invalid , ex-->123456 , in 4 to 6 digit" });
+            if(pincode && !pinCodeRegex.test(pincode))  return res.status(400).send({ status: false, message: "Given Pincode is invalid , ex-->123456 , in 4 to 6 digit" });
 
             if( !nameValidation.test(city)) return res.status(400).send({ status: false, message: "City name should be string only." });
 
