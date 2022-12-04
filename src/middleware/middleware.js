@@ -29,7 +29,7 @@ const authentication = function (req, res, next) {
 
 
     } catch (error) {
-        res.status(500).send({ status: false, message: error.message })
+        return res.status(500).send({ status: false, message: error.message })
     }
 
 }
@@ -50,7 +50,7 @@ const authorisation = async function (req, res, next) {
         let bookData = await bookModel.findById(bookId)
 
         if (!bookData) return res.status(404).send({ status: false, message: "BookId is not exist in DB." })
-        if(bookData.isDeleted == true) res.status(404).send({ status: false, message: "Book is already deleted" })
+        if(bookData.isDeleted == true) return res.status(404).send({ status: false, message: "Book is already deleted" })
 
         let userInBook = bookData.userId
 
@@ -60,7 +60,7 @@ const authorisation = async function (req, res, next) {
         next()
 
     } catch (error) {
-        res.status(500).send({ status: false, message: error.message })
+        return res.status(500).send({ status: false, message: error.message })
     }
 
 
