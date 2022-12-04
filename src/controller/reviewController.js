@@ -122,14 +122,14 @@ const deleteReview = async function (req, res) {
 
         const bookData = await bookModel.findById(bookId )
 
-        if (!bookData) return res.status(404).send({ status: false, message: "Book not found or deleted" });
+        if (!bookData) return res.status(404).send({ status: false, message: `No Book data found by this bookId :- ${bookId}`});
         if(bookData.isDeleted== true) return res.status(404).send({  status: false , message:"Book is already deleted"})
 
         if (!objectId.isValid(reviewId)) return res.status(400).send({ status: false, message: "Please give a Valid reviewId in path params" })
 
         const reviewbyReviewId = await reviewModel.findById(reviewId)
 
-        if (!reviewbyReviewId) return res.status(404).send({ status: false, message: `No review found by ${reviewId} or review is already deleted.` });
+        if (!reviewbyReviewId) return res.status(404).send({ status: false, message: `No review found by this reviewId :- ${reviewId}` });
         if(reviewbyReviewId.isDeleted== true) return res.status(404).send({ status: false , message:"Review is already deleted"})        
 
         if (reviewbyReviewId.bookId != bookId) return res.status(400).send({ status: false, message: "Review is not from this book" })
