@@ -34,6 +34,8 @@ const postReview = async function (req, res) {
 
         if (!rating) return res.status(400).send({ status: false, message: "Please give rating(mandatory) for this book in b/t 1 to 5" })
 
+        if( typeof rating !== Number) return res.status(400).send({ status: false, message: "Rating should be number." })
+
         if (rating < 1 || rating > 5) return res.status(400).send({ status: false, message: "Please give a rating in b/w 1 to 5" })
 
 
