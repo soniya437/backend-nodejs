@@ -17,11 +17,7 @@ const authentication = function (req, res, next) {
             }
             else {
 
-                // // Set attri. in request --> Used in autherisation , this tokenAuthorId
                 req.tokenUserId = decoded.userId
-                // console.log(decoded)
-                // console.log(decoded.userId)
-
                 next()
             }
         })
@@ -38,7 +34,6 @@ const authentication = function (req, res, next) {
 
 
 const authorisation = async function (req, res, next) {
-
 
     try {
 

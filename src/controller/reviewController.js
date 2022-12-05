@@ -38,10 +38,6 @@ const postReview = async function (req, res) {
 
         if (rating < 1 || rating > 5) return res.status(400).send({ status: false, message: "Please give a rating in b/w 1 to 5" })
 
-
-    
-
-
         let createReview = await reviewModel.create(body)
 
         let incBookReview = await bookModel.findByIdAndUpdate( 
@@ -138,11 +134,11 @@ const deleteReview = async function (req, res) {
 
         const markReviewDelete = await reviewModel.findByIdAndUpdate(reviewId, { $set: { isDeleted: true } }, { new: true })
 
-        const updateRviewCount = await bookModel.findByIdAndUpdate(bookId, { $inc: { reviews: -1 } }, { new: true }).lean()
+        const updateReviewCount = await bookModel.findByIdAndUpdate(bookId, { $inc: { reviews: -1 } }, { new: true }).lean()
 
-        updateRviewCount. reviewData = markReviewDelete     // // Creating one more attribute in mongoose object After using lean()
+        updateReviewCount. reviewData = markReviewDelete     // // Creating one more attribute in mongoose object After using lean()
 
-        return res.status(200).send({ status: true, message: "Review Deleted Successfully",updateRviewCount })
+        return res.status(200).send({ status: true, message: "Review Deleted Successfully",updateReviewCount })
     }
 
     catch (error) {

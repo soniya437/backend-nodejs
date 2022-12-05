@@ -72,7 +72,7 @@ const loginUser = async function (req, res) {
         
         const token = jwt.sign({ userId: userData._id.toString() }, "projectsecretcode" , { expiresIn: '24h' })
 
-        return res.status(200).send({ status: true, message: "succesfull logged in", token: token })
+        return res.status(200).send({ status: true, message: "succesfully logged in", token: token })
     }
     catch (error) {
         return res.status(500).send({ status: false, message: error.message })

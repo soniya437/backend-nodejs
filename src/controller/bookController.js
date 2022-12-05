@@ -28,7 +28,7 @@ const createBook = async function (req, res) {
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, message: "Give some data for book" })
         
 
-        if(!isValidEntry(title)) return res.status(400).send({status : false , message : "Tittle is not given."})
+        if(!isValidEntry(title)) return res.status(400).send({status : false , message : "Title is not given."})
         if(!isValidEntry(userId) || !objectId.isValid(userId)) return res.status(400).send({status : false , message : "UserId is not given or Invalid. "})
         if(!isValidEntry(category)) return res.status(400).send({status : false , message : "Category is not given."})
         if(!isValidEntry(subcategory)) return res.status(400).send({status : false , message : "Subcategory is not given."})
@@ -167,7 +167,7 @@ const updateBookById = async function (req, res) {
 
         const updatedBook = await bookModel.findByIdAndUpdate(
             { _id: bookId },
-            { $set: { title: title, excerpt: excerpt, releasedAt: releasedAt, ISBN: ISBN , releasedAt : releasedAt } },
+            { $set: { title: title, excerpt: excerpt, ISBN: ISBN , releasedAt : releasedAt } },
             { new: true }
         )
 
