@@ -6,7 +6,7 @@ const axios = require('axios')
 const checkInputsPresent = (value) => { return (Object.keys(value).length > 0) }
 
 const isValid = function (value) {
-    if (typeof value == "number" || typeof value == 'undefined || value == null') { return false }
+    if (typeof value == "number" || typeof value == 'undefined' || value == 'null') { return false }
     if (typeof value == "string" && value.trim().length == 0) {
         return false
     }
@@ -14,7 +14,7 @@ const isValid = function (value) {
 };
 
 
-exports.urlshorter = async (req, res) => {
+const urlShorter = async (req, res) => {
 
     try {
 
@@ -46,11 +46,11 @@ exports.urlshorter = async (req, res) => {
                 longUrl: isPresent.longUrl,
                 shortUrl: isPresent.shortUrl,
                 urlCode: isPresent.urlCode
-
             }
 
             return res.status(200).send({ status: true, message: `For this LongUrl use this ShortUrl: ${isPresent.shortUrl}`, data: isPresentObj })
         }
+
 
         let baseUR1 = "http://localhost:3000/"
         originalURL.urlCode = shortid.generate().toLowerCase()
@@ -58,10 +58,40 @@ exports.urlshorter = async (req, res) => {
 
         let createURL = await model.create(originalURL)
 
-        return res.status(201).send({ status: true, data: originalURL })
+        return res.status(201).send({ status: true, data: createURL })
 
     } catch (error) {
 
         return res.status(500).send({ status: 'error', error: error.message })
     }
 }
+
+
+
+const getUrl = async function (req, res) {
+    try {
+        let urlCode = req.params.urlCode
+
+
+        if (!isValid(urlCode)) {
+            return res.status(400).send({ status: false, msg: "Please Enter Valid UrlCode" })
+        }
+
+
+        let findUrlCode = await model.findOne({ urlCode: urlCode }).select({ longUrl: 1, _id: 0})
+        if (!findUrlCode) {
+            return res.status(404).send({ status: false, msg: "No URL Found OR Url is Incorrect" })
+        }
+
+        
+        return res.status(200).send({status:true, data:findUrlCode.longUrl})
+
+
+    } catch (err) {
+        return res.status(500).send({ status: false, msg: err.message })
+
+    }
+
+}
+
+module.exports ={urlShorter, getUrl}
