@@ -1,0 +1,20 @@
+{
+  "name": "project-url-shortner",
+  "version": "1.0.0",
+  "description": "This is the project for converting long URL into tiny URL.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exactshubham/project-URL-Shortner.git"
+  },
+  "author": "Shubham Chaturvedi, Abhinav Pratap Singh, Misbah Kanwal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/exactshubham/project-URL-Shortner/issues"
+  },
+  "homepage": "https://github.com/exactshubham/project-URL-Shortner#readme"
+}
