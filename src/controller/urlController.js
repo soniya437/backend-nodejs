@@ -14,7 +14,7 @@ const isValid = function (value) {
 };
 
 
-const urlShorter = async (req, res) => {
+exports.urlShorter = async (req, res) => {
 
     try {
 
@@ -68,7 +68,7 @@ const urlShorter = async (req, res) => {
 
 
 
-const getUrl = async function (req, res) {
+exports.getUrl = async function (req, res) {
     try {
         let urlCode = req.params.urlCode
 
@@ -94,4 +94,3 @@ const getUrl = async function (req, res) {
 
 }
 
-module.exports ={urlShorter, getUrl}
