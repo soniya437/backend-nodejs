@@ -11,10 +11,14 @@
     "type": "git",
     "url": "git+https://github.com/exactshubham/project-URL-Shortner.git"
   },
-  "author": "Shubham Chaturvedi, Abhinav Pratap Singh, Misbah Kanwal",
+  "author": "Shubham Chaturvedi, Abhinav Pratap Singh, Misbah Kanwal, Soniya",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/exactshubham/project-URL-Shortner/issues"
   },
-  "homepage": "https://github.com/exactshubham/project-URL-Shortner#readme"
+  "homepage": "https://github.com/exactshubham/project-URL-Shortner#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^6.8.0"
+  }
 }
