@@ -80,11 +80,11 @@ exports.getUrl = async function (req, res) {
 
         let findUrlCode = await model.findOne({ urlCode: urlCode }).select({ longUrl: 1, _id: 0})
         if (!findUrlCode) {
-            return res.status(404).send({ status: false, msg: "No URL Found OR Url is Incorrect" })
+            return res.status(404).send({ status: false, msg: `This URLCode: ${urlCode} not found` })
         }
 
         
-        return res.status(200).send({status:true, data:findUrlCode.longUrl})
+        return res.status(302).redirect(findUrlCode.longUrl)
 
 
     } catch (err) {
