@@ -58,7 +58,7 @@ exports.urlShorter = async (req, res) => {
 
         let createURL = await model.create(originalURL)
 
-        return res.status(201).send({ status: true, data: createURL })
+        return res.status(201).send({ status: true, data: originalURL })
 
     } catch (error) {
 
