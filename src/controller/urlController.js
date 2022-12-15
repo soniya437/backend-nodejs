@@ -46,6 +46,7 @@ exports.urlShorter = async (req, res) => {
 
         let option = {
             method: 'get',  
+            url: longUrl
         }
 
         let urlValidate = await axios(option)
