@@ -3,9 +3,11 @@ const shortid = require('shortid')
 const axios = require('axios')
 const { GET_ASYNC, SET_ASYNC } = require('../Redis/redis')
 
-
+//=================================checking request body=====================================================
 const checkInputsPresent = (value) => { return (Object.keys(value).length > 0) }
 
+
+//=========validation for empty request======================================================================
 const isValid = function (value) {
     if (typeof value == "number" || typeof value == 'undefined' || typeof value == 'null') { return false }
     if (typeof value == "string" && value.trim().length == 0) {  // this line means if value is string and value is empty then it will   
@@ -14,7 +16,7 @@ const isValid = function (value) {
     return true
 };
 
-
+//========================create data in  cache/db============================================================
 exports.urlShorter = async (req, res) => {
 
     try {
@@ -78,7 +80,7 @@ exports.urlShorter = async (req, res) => {
     }
 }
 
-
+//================get url from cache/db================================================================================
 
 exports.getUrl = async function (req, res) {
     try {
@@ -111,6 +113,7 @@ exports.getUrl = async function (req, res) {
 
     }
 }
+
 
 
 

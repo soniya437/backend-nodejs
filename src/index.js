@@ -2,6 +2,7 @@ const express= require('express');
 const mongoose=require("mongoose");
 const app=express();
 const route= require("./route/route")
+
 app.use(express.json());
 
 mongoose.set('strictQuery', false);
