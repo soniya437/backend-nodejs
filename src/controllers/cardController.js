@@ -1,6 +1,6 @@
-const cardModel = require('../model/cardModel');
-const customerModel = require('../model/customerModel');
-const validation = require('../validation')
+const cardModel = require('../models/cardModel');
+const customerModel = require('../models/customerModel');
+//const validation = require('../validation')
 const uuid = require('uuid')
 
 

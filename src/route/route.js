@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const customerController = require('../controller/customerController')
-const cardController = require('../controller/cardController')
+const customerController = require('../controllers/customerController')
+const cardController = require('../controllers/cardController')
 
    
 router.get('/getAllCustomer', customerController.getAllCustomers)

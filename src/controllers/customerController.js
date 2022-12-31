@@ -1,7 +1,9 @@
-const customerModel = require('../model/customerModel')
-const validation = require('../validation')
+const customerModel = require('../models/customerModel')
+//const validation = require('../validation')
 
 const uuid = require('uuid')
+
+
 
 
 
