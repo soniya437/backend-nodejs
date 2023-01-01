@@ -3,10 +3,6 @@ const customerModel = require('../models/customerModel')
 
 const uuid = require('uuid')
 
-
-
-
-
 const getAllCustomers = async (req,res)=>{
     // Get all customers List with status ACTIVE [GET]
 
@@ -27,7 +23,6 @@ const deleteCustomer = async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   };
-
 
   // Create new customer [POST]
 const createCustomer = async (req, res) => {

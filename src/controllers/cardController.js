@@ -21,7 +21,6 @@ const uuid = require('uuid')
       let {cardNumber, cardType, customerName, status, vision, customerID} = cardData;
       
       if(Object.keys(cardData).length ==0) return res.status(400).send({status:false, message:"Provide data"}) 
-     
 
       const cardCount = await cardModel.find()
 
